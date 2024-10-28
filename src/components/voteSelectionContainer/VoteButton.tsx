@@ -3,16 +3,26 @@ import styled from 'styled-components';
 
 const StyledButton = styled.button<{ color: string }>`
   background-color: ${({ color }) => color};
+  margin-top: 20px;
   color: #fff;
   border: none;
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.3s;
+  font-weight: bold;
+  font-size: 1.2rem;
+  transition: opacity 0.3s;
+//   width: 175px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  box-shadow: -4px 4px 10px 0px rgba(0, 0, 0, 0.5);
 
   &:hover {
-    background-color: #0056b3;
+    opacity: 0.8;
+  }
+
+  &:active {
+    transform: translateY(2px);
   }
 `;
 
