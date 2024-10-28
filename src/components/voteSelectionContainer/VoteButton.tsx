@@ -37,24 +37,26 @@ interface VoteButtonProps {
   setEthnicity: (ethnicity: string) => void;
 }
 
-const VoteButton = ({ 
-  label, 
-  color, 
+const VoteButton = ({
+  label,
+  color,
   onClick,
   gender,
   setGender,
   ethnicity,
-  setEthnicity 
+  setEthnicity
 }: VoteButtonProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const handleClick = () => {
     setIsModalOpen(true);
+    setShowError(false);
   };
 
   const handleConfirm = () => {
     if (!gender || !ethnicity) {
-      alert('Please select both gender and ethnicity before confirming');
+      setShowError(true);
       return;
     }
     setIsModalOpen(false);
@@ -88,35 +90,44 @@ const VoteButton = ({
           },
         }}
       >
+        {showError && (
+          <div style={{ 
+            color: '#dc3545', 
+            marginBottom: '15px', 
+            fontWeight: 'bold' 
+          }}>
+            Please select both gender and ethnicity before confirming
+          </div>
+        )}
         <h2>What are you?</h2>
 
         <div style={{ marginBottom: '20px' }}>
           <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>Gender:</div>
           <div style={{ display: 'flex', gap: '15px' }}>
             <label>
-              <input 
-                type="radio" 
-                name="gender" 
-                value="men" 
+              <input
+                type="radio"
+                name="gender"
+                value="men"
                 checked={gender === 'men'}
                 onChange={(e) => setGender(e.target.value)}
-                required 
+                required
               /> Men
             </label>
             <label>
-              <input 
-                type="radio" 
-                name="gender" 
-                value="women" 
+              <input
+                type="radio"
+                name="gender"
+                value="women"
                 checked={gender === 'women'}
                 onChange={(e) => setGender(e.target.value)}
               /> Women
             </label>
             <label>
-              <input 
-                type="radio" 
-                name="gender" 
-                value="lgbtq" 
+              <input
+                type="radio"
+                name="gender"
+                value="lgbtq"
                 checked={gender === 'lgbtq'}
                 onChange={(e) => setGender(e.target.value)}
               /> LGBTQ+
@@ -128,38 +139,38 @@ const VoteButton = ({
           <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>Ethnicity:</div>
           <div style={{ display: 'flex', gap: '15px' }}>
             <label>
-              <input 
-                type="radio" 
-                name="ethnicity" 
-                value="white" 
+              <input
+                type="radio"
+                name="ethnicity"
+                value="white"
                 checked={ethnicity === 'white'}
                 onChange={(e) => setEthnicity(e.target.value)}
-                required 
+                required
               /> White
             </label>
             <label>
-              <input 
-                type="radio" 
-                name="ethnicity" 
-                value="black" 
+              <input
+                type="radio"
+                name="ethnicity"
+                value="black"
                 checked={ethnicity === 'black'}
                 onChange={(e) => setEthnicity(e.target.value)}
               /> Black
             </label>
             <label>
-              <input 
-                type="radio" 
-                name="ethnicity" 
-                value="spanish" 
+              <input
+                type="radio"
+                name="ethnicity"
+                value="spanish"
                 checked={ethnicity === 'spanish'}
                 onChange={(e) => setEthnicity(e.target.value)}
               /> Spanish
             </label>
             <label>
-              <input 
-                type="radio" 
-                name="ethnicity" 
-                value="other" 
+              <input
+                type="radio"
+                name="ethnicity"
+                value="other"
                 checked={ethnicity === 'other'}
                 onChange={(e) => setEthnicity(e.target.value)}
               /> Other
