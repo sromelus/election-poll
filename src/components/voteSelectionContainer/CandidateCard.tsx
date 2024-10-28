@@ -27,22 +27,22 @@ interface CandidateCardProps {
 }
 
 const CandidateCard = ({
-  label, 
-  button_color, 
-  image, 
+  label,
+  button_color,
+  image,
   onVote,
   gender,
   setGender,
   ethnicity,
-  setEthnicity 
+  setEthnicity
 }: CandidateCardProps) => (
   <Card>
     <div className="image_container">
         <img src={image} alt={`${label}'s img`} style={{ width: '100%', borderRadius: '300px' }} />
     </div>
-    <VoteButton 
-      label={label} 
-      color={button_color} 
+    <VoteButton
+      label={label}
+      color={button_color}
       onClick={onVote}
       gender={gender}
       setGender={setGender}

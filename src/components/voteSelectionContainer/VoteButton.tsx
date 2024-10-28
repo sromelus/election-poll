@@ -46,8 +46,8 @@ const VoteButton = ({
   ethnicity,
   setEthnicity
 }: VoteButtonProps) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [showError, setShowError] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [showError, setShowError] = useState<boolean>(false);
 
   const handleClick = () => {
     setIsModalOpen(true);
