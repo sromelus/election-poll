@@ -31,12 +31,22 @@ interface VoteButtonProps {
   label: string;
   color: string;
   onClick: () => void;
+  gender: string;
+  setGender: (gender: string) => void;
+  ethnicity: string;
+  setEthnicity: (ethnicity: string) => void;
 }
 
-const VoteButton = ({ label, color, onClick }: VoteButtonProps) => {
+const VoteButton = ({ 
+  label, 
+  color, 
+  onClick,
+  gender,
+  setGender,
+  ethnicity,
+  setEthnicity 
+}: VoteButtonProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [gender, setGender] = useState('');
-  const [ethnicity, setEthnicity] = useState('');
 
   const handleClick = () => {
     setIsModalOpen(true);
@@ -84,13 +94,32 @@ const VoteButton = ({ label, color, onClick }: VoteButtonProps) => {
           <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>Gender:</div>
           <div style={{ display: 'flex', gap: '15px' }}>
             <label>
-              <input type="radio" name="gender" value="men" required /> Men
+              <input 
+                type="radio" 
+                name="gender" 
+                value="men" 
+                checked={gender === 'men'}
+                onChange={(e) => setGender(e.target.value)}
+                required 
+              /> Men
             </label>
             <label>
-              <input type="radio" name="gender" value="women" /> Women
+              <input 
+                type="radio" 
+                name="gender" 
+                value="women" 
+                checked={gender === 'women'}
+                onChange={(e) => setGender(e.target.value)}
+              /> Women
             </label>
             <label>
-              <input type="radio" name="gender" value="lgbtq" /> LGBTQ+
+              <input 
+                type="radio" 
+                name="gender" 
+                value="lgbtq" 
+                checked={gender === 'lgbtq'}
+                onChange={(e) => setGender(e.target.value)}
+              /> LGBTQ+
             </label>
           </div>
         </div>
@@ -99,16 +128,41 @@ const VoteButton = ({ label, color, onClick }: VoteButtonProps) => {
           <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>Ethnicity:</div>
           <div style={{ display: 'flex', gap: '15px' }}>
             <label>
-              <input type="radio" name="ethnicity" value="white" required /> White
+              <input 
+                type="radio" 
+                name="ethnicity" 
+                value="white" 
+                checked={ethnicity === 'white'}
+                onChange={(e) => setEthnicity(e.target.value)}
+                required 
+              /> White
             </label>
             <label>
-              <input type="radio" name="ethnicity" value="black" /> Black
+              <input 
+                type="radio" 
+                name="ethnicity" 
+                value="black" 
+                checked={ethnicity === 'black'}
+                onChange={(e) => setEthnicity(e.target.value)}
+              /> Black
             </label>
             <label>
-              <input type="radio" name="ethnicity" value="spanish" /> Spanish
+              <input 
+                type="radio" 
+                name="ethnicity" 
+                value="spanish" 
+                checked={ethnicity === 'spanish'}
+                onChange={(e) => setEthnicity(e.target.value)}
+              /> Spanish
             </label>
             <label>
-              <input type="radio" name="ethnicity" value="other" /> Other
+              <input 
+                type="radio" 
+                name="ethnicity" 
+                value="other" 
+                checked={ethnicity === 'other'}
+                onChange={(e) => setEthnicity(e.target.value)}
+              /> Other
             </label>
           </div>
         </div>

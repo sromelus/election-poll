@@ -22,8 +22,10 @@ const ProgressBarContainer = styled.div`
 `;
 
 const VoteSelection = () => {
-    const [trumpPollNumbers, setTrumpPollNumbers] = useState(13);
-    const [kamalaPollNumbers, setKamalaPollNumbers] = useState(34);
+    const [trumpPollNumbers, setTrumpPollNumbers] = useState<number>(13);
+    const [kamalaPollNumbers, setKamalaPollNumbers] = useState<number>(34);
+    const [gender, setGender] = useState<string>('');
+    const [ethnicity, setEthnicity] = useState<string>('');
 
     const handleTrumpVote = () => {
         setTrumpPollNumbers(trumpPollNumbers + 1)
@@ -33,13 +35,30 @@ const VoteSelection = () => {
         setKamalaPollNumbers(kamalaPollNumbers + 1)
     }
 
-    
 
   return (
     <>
         <CandidateCardContainer>
-            <CandidateCard label="Trump" button_color="red" image={trumpImage} onVote={handleTrumpVote} />
-            <CandidateCard label="Kamala" button_color="blue" image={kamalaImage} onVote={handleKamalaVote} />
+            <CandidateCard
+                label="Trump"
+                button_color="red"
+                image={trumpImage}
+                onVote={handleTrumpVote}
+                gender={gender}
+                setGender={setGender}
+                ethnicity={ethnicity}
+                setEthnicity={setEthnicity}
+            />
+            <CandidateCard
+                label="Kamala"
+                button_color="blue"
+                image={kamalaImage}
+                onVote={handleKamalaVote}
+                gender={gender}
+                setGender={setGender}
+                ethnicity={ethnicity}
+                setEthnicity={setEthnicity}
+            />
         </CandidateCardContainer>
 
         <ProgressBarContainer>
@@ -53,7 +72,9 @@ const VoteSelection = () => {
             </div>
         </ProgressBarContainer>
 
-        You are a white man showing for Trump
+        {gender && ethnicity && (
+            <p>You are a {ethnicity.toLowerCase()} {gender.toLowerCase()} showing for Trump {trumpPollNumbers} votes, Kamala {kamalaPollNumbers} votes</p>
+        )}
     </>
   );
 };

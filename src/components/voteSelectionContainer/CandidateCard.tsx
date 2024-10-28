@@ -20,14 +20,35 @@ interface CandidateCardProps {
   image: string;
   button_color: string;
   onVote: () => void;
+  gender: string;
+  setGender: (gender: string) => void;
+  ethnicity: string;
+  setEthnicity: (ethnicity: string) => void;
 }
 
-const CandidateCard = ({label, button_color, image, onVote }: CandidateCardProps) => (
+const CandidateCard = ({
+  label, 
+  button_color, 
+  image, 
+  onVote,
+  gender,
+  setGender,
+  ethnicity,
+  setEthnicity 
+}: CandidateCardProps) => (
   <Card>
     <div className="image_container">
         <img src={image} alt={`${label}'s img`} style={{ width: '100%', borderRadius: '300px' }} />
     </div>
-    <VoteButton label={label} color={button_color} onClick={onVote} />
+    <VoteButton 
+      label={label} 
+      color={button_color} 
+      onClick={onVote}
+      gender={gender}
+      setGender={setGender}
+      ethnicity={ethnicity}
+      setEthnicity={setEthnicity}
+    />
   </Card>
 );
 
