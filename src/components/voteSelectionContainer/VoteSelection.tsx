@@ -33,6 +33,8 @@ const VoteSelection = () => {
         setKamalaPollNumbers(kamalaPollNumbers + 1)
     }
 
+    
+
   return (
     <>
         <CandidateCardContainer>
@@ -50,6 +52,8 @@ const VoteSelection = () => {
                 <ProgressBar color="blue" percentage={kamalaPollNumbers} />
             </div>
         </ProgressBarContainer>
+
+        You are a white man showing for Trump
     </>
   );
 };
