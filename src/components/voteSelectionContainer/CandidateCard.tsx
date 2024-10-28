@@ -3,24 +3,29 @@ import styled from 'styled-components';
 import VoteButton from './VoteButton';
 
 const Card = styled.div`
-  border: 1px solid #ccc;
   border-radius: 8px;
   padding: 16px;
   text-align: center;
-  width: 150px;
+
+  .image_container {
+    border-radius: 300px;
+    border: 1px solid #ccc;
+    margin: 0 auto;
+    box-shadow: -4px 4px 10px 0px rgba(0, 0, 0, 0.5);
+  }
 `;
 
 interface CandidateCardProps {
-  name: string;
   label: string;
+  image: string;
   button_color: string;
   onVote: () => void;
 }
 
-const CandidateCard = ({ name, label, button_color, onVote }: CandidateCardProps) => (
+const CandidateCard = ({label, button_color, image, onVote }: CandidateCardProps) => (
   <Card>
-    <div style={{ width: '50px', height: '50px', borderRadius: '50px', border: '1px solid black' }}>
-        <img src='' alt={`${name}'s avatar`} style={{ width: '100%', borderRadius: '8px' }} />
+    <div className="image_container">
+        <img src={image} alt={`${label}'s img`} style={{ width: '100%', borderRadius: '300px' }} />
     </div>
     <VoteButton label={label} color={button_color} onClick={onVote} />
   </Card>
