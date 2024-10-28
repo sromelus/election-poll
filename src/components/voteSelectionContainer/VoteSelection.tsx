@@ -29,10 +29,14 @@ const VoteSelection = () => {
 
     const handleTrumpVote = () => {
         setTrumpPollNumbers(trumpPollNumbers + 1)
+        setGender('')
+        setEthnicity('')
     }
 
     const handleKamalaVote = () => {
         setKamalaPollNumbers(kamalaPollNumbers + 1)
+        setGender('')
+        setEthnicity('')
     }
 
 
