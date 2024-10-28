@@ -91,12 +91,16 @@ const VoteButton = ({
         }}
       >
         {showError && (
-          <div style={{ 
-            color: '#dc3545', 
-            marginBottom: '15px', 
-            fontWeight: 'bold' 
+          <div style={{
+            color: '#dc3545',
+            marginBottom: '15px',
+            fontWeight: 'bold',
           }}>
-            Please select both gender and ethnicity before confirming
+            <p>Please make a selection for both</p>
+            <ul>
+                <li>gender</li>
+                <li>ethnicity</li>
+            </ul>
           </div>
         )}
         <h2>What are you?</h2>
