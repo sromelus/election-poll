@@ -32,7 +32,7 @@ function App() {
       <StyledFooter>
         © 2024 sprunoffpolling.com <span>| </span>
          <a href="mailto:sprunoffpolling@gmail.com">Contact Me</a> <span>| </span>
-         <span style={{cursor: 'pointer', textDecoration: 'underline', color: 'blue'}} onClick={handleShowShareLink}>Share with Friends</span>
+         <span style={{cursor: 'pointer', textDecoration: 'underline', color: 'blue', display: "inline-block"}} onClick={handleShowShareLink}>Share with Friends</span>
       </StyledFooter>
     </AppContainer>
   );
