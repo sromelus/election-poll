@@ -2,6 +2,7 @@ import Modal from 'react-modal';
 import Header from './components/Header';
 import VoteSelection from './components/voteSelectionContainer/VoteSelection';
 import { styled } from 'styled-components';
+import { useState } from 'react';
 
 const AppContainer = styled.div`
   min-height: 100vh;
@@ -18,12 +19,20 @@ const StyledFooter = styled.footer`
 Modal.setAppElement('#root');
 
 function App() {
+  const [showShareLink, setShowShareLink] = useState<boolean>(false)
+
+  const handleShowShareLink = () => {
+    setShowShareLink(!showShareLink)
+  }
+
   return (
     <AppContainer>
       <Header />
-      <VoteSelection />
+      <VoteSelection showShareLink={showShareLink}/>
       <StyledFooter>
-        © 2024 sprunoffpolling.com | <a href="mailto:sprunoffpolling@gmail.com">Contact Me</a> | <a href="https://www.facebook.com/sprunoffpolling">Share with Friends</a>
+        © 2024 sprunoffpolling.com <span>| </span>
+         <a href="mailto:sprunoffpolling@gmail.com">Contact Me</a> <span>| </span>
+         <span style={{cursor: 'pointer', textDecoration: 'underline', color: 'blue'}} onClick={handleShowShareLink}>Share with Friends</span>
       </StyledFooter>
     </AppContainer>
   );
