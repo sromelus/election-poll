@@ -4,6 +4,7 @@ import ProgressBar from './ProgressBar';
 import styled from 'styled-components';
 import trumpImage from '../../trump_img.png'
 import kamalaImage from '../../kamala_img.png'
+import Confetti from 'react-confetti';
 
 const CandidateCardContainer = styled.div`
   display: flex;
@@ -21,12 +22,71 @@ const ProgressBarContainer = styled.div`
   }
 `;
 
+const Loader = styled.span`
+    display: inline-block;
+    width: 40px;
+    height: 16px;
+    background:
+        radial-gradient(circle 3px at 3px center, #000 100%, transparent 0),
+        radial-gradient(circle 3px at 3px center, #000 100%, transparent 0);
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
+    position: relative;
+    animation: ballX 1s linear infinite;
+
+    &:before {
+        content: "";
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #000;
+        inset: 0;
+        margin:auto;
+        animation: moveX 1s cubic-bezier(0.5,300,0.5,-300) infinite;
+    }
+
+    @keyframes ballX {
+        0%,25%,50%,75%, 100%  {background-position: 25% 0,75% 0}
+        40%     {background-position: 25% 0,85% 0}
+        90%     {background-position: 15% 0,75% 0}
+    }
+
+    @keyframes moveX {
+        100% {transform:translate(0.15px)}
+    }
+`;
+
+const ThankYouContainer = styled.div`
+    border: 1px solid #000;
+    padding: 20px;
+    border-radius: 10px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background-color: #fff;
+    font-weight: bold;
+    color: green;
+    animation: fadeOut 10s ease-in-out;
+    animation-fill-mode: forwards;
+
+    @keyframes fadeOut {
+        0% {opacity: 1}
+        90% {opacity: 1}
+        100% {opacity: 0}
+    }
+`;
+
 const VoteSelection = () => {
     const [trumpPollNumbers, setTrumpPollNumbers] = useState<number>(0);
     const [kamalaPollNumbers, setKamalaPollNumbers] = useState<number>(0);
     const [gender, setGender] = useState<string>('');
     const [ethnicity, setEthnicity] = useState<string>('');
     const [maxPercentage, setMaxPercentage] = useState<number>(100)
+    const [showThankYou, setShowThankYou] = useState<{show: boolean, candidate: string}>({show: false, candidate: ''})
+    const [shareLinkCopied, setShareLinkCopied] = useState<string>('copy link')
 
     useEffect(() => {
         getVotes()
@@ -67,16 +127,28 @@ const VoteSelection = () => {
         setTrumpPollNumbers(trumpPollNumbers + 1)
         updateMaxPercentageReached()
         postVote('trump')
-        setGender('')
-        setEthnicity('')
+        handleResetVotes('trump')
     }
 
     const handleKamalaVote = () => {
         setKamalaPollNumbers(kamalaPollNumbers + 1)
         updateMaxPercentageReached()
         postVote('kamala')
+        handleResetVotes('kamala')
+    }
+
+    const handleResetVotes = (candidate: string) => {
+        setShowThankYou({show: true, candidate: candidate})
         setGender('')
         setEthnicity('')
+        setTimeout(() => {
+            setShowThankYou({show: false, candidate: ''})
+        }, 10000)
+    }
+
+    const handleCopyShareLink = () => {
+        navigator.clipboard.writeText('https://sprunoffpolling.com/')
+        setShareLinkCopied('copied!')
     }
 
     return (
@@ -106,18 +178,34 @@ const VoteSelection = () => {
 
             <ProgressBarContainer>
                 <div>
-                    <p style={{fontSize: '1.2rem', fontWeight: 'bold'}}>Trump {trumpPollNumbers}</p>
+                    <p style={{fontSize: '1.2rem', fontWeight: 'bold'}}>
+                        Trump {trumpPollNumbers ? trumpPollNumbers : <Loader />}
+                    </p>
                     <ProgressBar color="red" percentage={trumpPollNumbers} maxPercentage={maxPercentage} />
                 </div>
                 <div>
-                    <p style={{fontSize: '1.2rem', fontWeight: 'bold'}}>Kamala {kamalaPollNumbers}</p>
+                    <p style={{fontSize: '1.2rem', fontWeight: 'bold'}}>
+                        Kamala {kamalaPollNumbers ? kamalaPollNumbers : <Loader />}
+                    </p>
                     <ProgressBar color="blue" percentage={kamalaPollNumbers} maxPercentage={maxPercentage} />
                 </div>
             </ProgressBarContainer>
 
+            {showThankYou.show && (
+                <>
+                    <ThankYouContainer>
+                        <p>You submitted 1 votes for {showThankYou.candidate}</p>
+                        <p>Thank you for showing support!</p>
+                    </ThankYouContainer>
+                    <Confetti />
+                </>
+            )}
+
             <div>
-                <p>You are a {ethnicity.toLowerCase()} {gender.toLowerCase()} showing for Trump {trumpPollNumbers} votes, Kamala {kamalaPollNumbers} votes</p>
+                <a href="/">sprunoffpolling.com Who is your favorite candidate?</a>
+                <button onClick={handleCopyShareLink}>{shareLinkCopied}</button>
             </div>
+
         </>
     );
 };

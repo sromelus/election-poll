@@ -2,8 +2,6 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import Modal from 'react-modal';
 
-Modal.setAppElement('#root');
-
 const StyledButton = styled.button<{ color: string }>`
   background-color: ${({ color }) => color};
   margin-top: 20px;

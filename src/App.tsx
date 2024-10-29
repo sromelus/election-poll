@@ -1,4 +1,4 @@
-import React from 'react';
+import Modal from 'react-modal';
 import Header from './components/Header';
 import VoteSelection from './components/voteSelectionContainer/VoteSelection';
 import { styled } from 'styled-components';
@@ -14,6 +14,8 @@ const StyledFooter = styled.footer`
   text-align: center;
   padding: 1rem;
 `;
+
+Modal.setAppElement('#root');
 
 function App() {
   return (
