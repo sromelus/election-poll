@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import trumpImage from '../../trump_img.png'
 import kamalaImage from '../../kamala_img.png'
 import Confetti from 'react-confetti';
+import SocialShareButtons from '../SocialShareButtons';
 
 const CandidateCardContainer = styled.div`
   display: flex;
@@ -69,7 +70,7 @@ const ThankYouContainer = styled.div`
     background-color: #fff;
     font-weight: bold;
     color: green;
-    animation: fadeOut 10s ease-in-out;
+    animation: fadeOut 7s ease-in-out;
     animation-fill-mode: forwards;
 
     @keyframes fadeOut {
@@ -79,7 +80,15 @@ const ThankYouContainer = styled.div`
     }
 `;
 
-const VoteSelection = () => {
+const ShareLinkContainer = styled(ThankYouContainer)`
+    animation: none;
+`;
+
+interface VoteSelectionProps {
+    showShareLink: boolean;
+}
+
+const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
     const [trumpPollNumbers, setTrumpPollNumbers] = useState<number>(0);
     const [kamalaPollNumbers, setKamalaPollNumbers] = useState<number>(0);
     const [gender, setGender] = useState<string>('');
@@ -87,10 +96,13 @@ const VoteSelection = () => {
     const [maxPercentage, setMaxPercentage] = useState<number>(100)
     const [showThankYou, setShowThankYou] = useState<{show: boolean, candidate: string}>({show: false, candidate: ''})
     const [shareLinkCopied, setShareLinkCopied] = useState<string>('copy link')
+    const [showSocialShareButtons, setShowSocialShareButtons] = useState<boolean>(false)
+    const URL_ENCODED_LINK = 'Show+your+support+for+your+favorite+candidate+in+this+poll.+https%3A%2F%2Fwww.sprunoffpolling.com%0D%0A'
 
     useEffect(() => {
         getVotes()
-    }, [trumpPollNumbers, kamalaPollNumbers]);
+        setShowSocialShareButtons(showShareLink)
+    }, [trumpPollNumbers, kamalaPollNumbers, showShareLink]);
 
     const getVotes = () => {
         fetch('http://localhost:8080/api/votes')
@@ -143,12 +155,16 @@ const VoteSelection = () => {
         setEthnicity('')
         setTimeout(() => {
             setShowThankYou({show: false, candidate: ''})
-        }, 10000)
+            setShowSocialShareButtons(true)
+        }, 7000)
     }
 
     const handleCopyShareLink = () => {
-        navigator.clipboard.writeText('https://sprunoffpolling.com/')
+        navigator.clipboard.writeText('Show your support for your favorite candidate in this poll! https://www.sprunoffpolling.com')
         setShareLinkCopied('copied!')
+        setTimeout(() => {
+            setShareLinkCopied('copy link')
+        }, 3000)
     }
 
     return (
@@ -201,10 +217,19 @@ const VoteSelection = () => {
                 </>
             )}
 
-            <div>
-                <a href="/">sprunoffpolling.com Who is your favorite candidate?</a>
-                <button onClick={handleCopyShareLink}>{shareLinkCopied}</button>
-            </div>
+            {showSocialShareButtons && (
+                <ShareLinkContainer>
+                    <p>Share this link with your friends!</p>
+                    <a href="https://www.sprunoffpolling.com">sprunoffpolling.com</a>
+                    <button
+                        style={{marginLeft: '10px', fontWeight: 'bold', border: '1px solid lightblue', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer'}}
+                        onClick={handleCopyShareLink}
+                    >
+                        {shareLinkCopied}
+                    </button>
+                    <SocialShareButtons urlEncodedLink={URL_ENCODED_LINK} />
+                </ShareLinkContainer>
+            )}
 
         </>
     );
