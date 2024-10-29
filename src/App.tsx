@@ -21,7 +21,7 @@ function App() {
       <Header />
       <VoteSelection />
       <StyledFooter>
-        © 2024 unofficalpoll.com
+        © 2024 unofficalpoll.com 
       </StyledFooter>
     </AppContainer>
   );
