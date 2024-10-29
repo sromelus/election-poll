@@ -26,15 +26,26 @@ const VoteSelection = () => {
     const [kamalaPollNumbers, setKamalaPollNumbers] = useState<number>(34);
     const [gender, setGender] = useState<string>('');
     const [ethnicity, setEthnicity] = useState<string>('');
+    const [maxPercentage, setMaxPercentage] = useState<number>(100)
+
+    const updateMaxPercentageReached = () => {
+        const highestPollPercentage = Math.max(trumpPollNumbers, kamalaPollNumbers)
+        const ratio = highestPollPercentage / maxPercentage;
+        if (ratio > 0.75) {
+            setMaxPercentage(maxPercentage * 5)
+        }
+    };
 
     const handleTrumpVote = () => {
         setTrumpPollNumbers(trumpPollNumbers + 1)
+        updateMaxPercentageReached()
         setGender('')
         setEthnicity('')
     }
 
     const handleKamalaVote = () => {
         setKamalaPollNumbers(kamalaPollNumbers + 1)
+        updateMaxPercentageReached()
         setGender('')
         setEthnicity('')
     }
@@ -68,11 +79,11 @@ const VoteSelection = () => {
         <ProgressBarContainer>
             <div>
                 <p style={{fontSize: '1.2rem', fontWeight: 'bold'}}>Trump {trumpPollNumbers}</p>
-                <ProgressBar color="red" percentage={trumpPollNumbers} />
+                <ProgressBar color="red" percentage={trumpPollNumbers} maxPercentage={maxPercentage} />
             </div>
             <div>
                 <p style={{fontSize: '1.2rem', fontWeight: 'bold'}}>Kamala {kamalaPollNumbers}</p>
-                <ProgressBar color="blue" percentage={kamalaPollNumbers} />
+                <ProgressBar color="blue" percentage={kamalaPollNumbers} maxPercentage={maxPercentage} />
             </div>
         </ProgressBarContainer>
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 
 const BarContainer = styled.div`
@@ -20,12 +19,17 @@ const Progress = styled.div<{ width: number; color: string }>`
 interface ProgressBarProps {
     percentage: number;
     color: string;
+    maxPercentage: number;
 }
 
-const ProgressBar = ({ color, percentage }: ProgressBarProps) => (
-    <BarContainer>
-        <Progress color={color} width={percentage} />
-    </BarContainer>
-);
+const ProgressBar = ({ color, percentage, maxPercentage }: ProgressBarProps) => {
+    const normalizedPercentage = (percentage / maxPercentage) * 100;
+
+    return (
+        <BarContainer>
+            <Progress color={color} width={normalizedPercentage} />
+        </BarContainer>
+    );
+};
 
 export default ProgressBar;
