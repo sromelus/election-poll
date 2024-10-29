@@ -118,7 +118,15 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
     }
 
     const postVote = (candidate: string) => {
-        const data = { candidate: candidate }
+        const data = {
+            visitedUser: {
+                disabledVote: disabledVote
+            },
+            candidate: candidate,
+            voterGender: gender,
+            voterEthnicity: ethnicity,
+        }
+
         fetch('http://localhost:8080/api/votes', {
             method: 'POST',
             headers: {
