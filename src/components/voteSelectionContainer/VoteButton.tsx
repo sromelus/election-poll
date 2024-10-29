@@ -28,6 +28,43 @@ const StyledButton = styled.button<{ color: string, disabled: boolean }>`
   }
 `;
 
+const StyledModalBody = styled.div`
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+    max-width: 300px;
+  }
+`;
+
+const StyledLabel = styled.label<{ checked: boolean, color: string }>`
+  display: inline-block;
+  padding: 8px 16px;
+  border: 2px solid #ccc;
+  border-radius: 20px;
+  cursor: pointer;
+  position: relative;
+  background: white;
+  transition: all 0.2s;
+
+  input {
+    display: none;
+  }
+
+  &:hover {
+    border-color: ${({ color }) => color || '#666'};
+  }
+
+  ${({ checked, color }) => checked && `
+    background: ${color || '#666'};
+    color: white;
+    border-color: ${color || '#666'};
+
+    &::after {
+      content: '✓';
+      margin-left: 5px;
+    }
+  `}
+`;
+
 interface VoteButtonProps {
   label: string;
   color: string;
@@ -93,129 +130,153 @@ const VoteButton = ({
           },
         }}
       >
-        {showError && (
-          <div style={{
-            color: '#dc3545',
-            marginBottom: '15px',
-            fontWeight: 'bold',
-          }}>
-            <p>Please make a selection for both</p>
-            <ul>
-                <li>gender</li>
-                <li>ethnicity</li>
-            </ul>
-          </div>
-        )}
-        <h2>What are you?</h2>
+        <StyledModalBody>
+          {showError && (
+            <div style={{
+                    color: '#dc3545',
+                    marginBottom: '15px',
+                    fontWeight: 'bold',
+                  }}>
+              <p>Please make a selection for both</p>
+              <ul>
+                  <li>gender</li>
+                  <li>ethnicity</li>
+              </ul>
+            </div>
+          )}
+          <h2>What are you?</h2>
 
-        <div style={{ marginBottom: '20px' }}>
-          <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>Gender:</div>
-          <div style={{ display: 'flex', gap: '15px' }}>
-            <label>
-              <input
-                type="radio"
-                name="gender"
-                value="men"
-                checked={gender === 'men'}
-                onChange={(e) => setGender(e.target.value)}
-                required
-              /> Men
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="gender"
-                value="women"
-                checked={gender === 'women'}
-                onChange={(e) => setGender(e.target.value)}
-              /> Women
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="gender"
-                value="lgbtq"
-                checked={gender === 'lgbtq'}
-                onChange={(e) => setGender(e.target.value)}
-              /> LGBTQ+
-            </label>
+          <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>Gender:</div>
+            <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
+              <StyledLabel checked={gender === 'men'} color={color}>
+                <input
+                  type="radio"
+                  name="gender"
+                  value="men"
+                  checked={gender === 'men'}
+                  onChange={(e) => setGender(e.target.value)}
+                  required
+                />
+                Men
+              </StyledLabel>
+              <StyledLabel checked={gender === 'women'} color={color}>
+                <input
+                  type="radio"
+                  name="gender"
+                  value="women"
+                  checked={gender === 'women'}
+                  onChange={(e) => setGender(e.target.value)}
+                />
+                Female
+              </StyledLabel>
+              <StyledLabel checked={gender === 'non-binary'} color={color}>
+                <input
+                  type="radio"
+                  name="gender"
+                  value="non-binary"
+                  checked={gender === 'non-binary'}
+                  onChange={(e) => setGender(e.target.value)}
+                />
+                Non-binary
+              </StyledLabel>
+              <StyledLabel checked={gender === 'other'} color={color}>
+                <input
+                  type="radio"
+                  name="gender"
+                  value="other"
+                  checked={gender === 'other'}
+                  onChange={(e) => setGender(e.target.value)}
+                />
+                Other
+              </StyledLabel>
+            </div>
           </div>
-        </div>
 
-        <div style={{ marginBottom: '20px' }}>
-          <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>Ethnicity:</div>
-          <div style={{ display: 'flex', gap: '15px' }}>
-            <label>
-              <input
-                type="radio"
-                name="ethnicity"
-                value="white"
-                checked={ethnicity === 'white'}
-                onChange={(e) => setEthnicity(e.target.value)}
-                required
-              /> White
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="ethnicity"
-                value="black"
-                checked={ethnicity === 'black'}
-                onChange={(e) => setEthnicity(e.target.value)}
-              /> Black
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="ethnicity"
-                value="spanish"
-                checked={ethnicity === 'spanish'}
-                onChange={(e) => setEthnicity(e.target.value)}
-              /> Spanish
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="ethnicity"
-                value="other"
-                checked={ethnicity === 'other'}
-                onChange={(e) => setEthnicity(e.target.value)}
-              /> Other
-            </label>
+          <div style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>Ethnicity:</div>
+            <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
+              <StyledLabel checked={ethnicity === 'white'} color={color}>
+                <input
+                  type="radio"
+                  name="ethnicity"
+                  value="white"
+                  checked={ethnicity === 'white'}
+                  onChange={(e) => setEthnicity(e.target.value)}
+                  required
+                /> White
+              </StyledLabel>
+              <StyledLabel checked={ethnicity === 'black'} color={color}>
+                <input
+                  type="radio"
+                  name="ethnicity"
+                  value="black"
+                  checked={ethnicity === 'black'}
+                  onChange={(e) => setEthnicity(e.target.value)}
+                /> Black
+              </StyledLabel>
+              <StyledLabel checked={ethnicity === 'spanish'} color={color}>
+                <input
+                  type="radio"
+                  name="ethnicity"
+                  value="spanish"
+                  checked={ethnicity === 'spanish'}
+                  onChange={(e) => setEthnicity(e.target.value)}
+                /> Hispanic
+              </StyledLabel>
+              <StyledLabel checked={ethnicity === 'asian'} color={color}>
+                <input
+                  type="radio"
+                  name="ethnicity"
+                  value="asian"
+                  checked={ethnicity === 'asian'}
+                  onChange={(e) => setEthnicity(e.target.value)}
+                /> Asian
+              </StyledLabel>
+              <StyledLabel checked={ethnicity === 'other'} color={color}>
+                <input
+                  type="radio"
+                  name="ethnicity"
+                  value="other"
+                  checked={ethnicity === 'other'}
+                  onChange={(e) => setEthnicity(e.target.value)}
+                /> Other
+              </StyledLabel>
+            </div>
           </div>
-        </div>
 
-        <p>Are you sure you want to show support for {label}?</p>
-        <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
-          <button
-            onClick={() => setIsModalOpen(false)}
-            style={{
-              backgroundColor: 'white',
-              color: '#dc3545',
-              border: '2px solid #dc3545',
-              padding: '8px 16px',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold'
-            }}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleConfirm}
-            style={{
-              backgroundColor: color,
-              color: '#fff',
-              border: 'none',
-              padding: '8px 16px',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: 'bold'
-            }}
-          >
-            Confirm
-          </button>
-        </div>
+          <p>Are you sure you want to show support for {label}?</p>
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
+            <button
+              onClick={() => setIsModalOpen(false)}
+              style={{
+                backgroundColor: 'white',
+                color: '#dc3545',
+                border: '2px solid #dc3545',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontWeight: 'bold'
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleConfirm}
+              style={{
+                backgroundColor: color,
+                color: '#fff',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontWeight: 'bold'
+              }}
+            >
+              Confirm
+            </button>
+          </div>
+        </StyledModalBody>
       </Modal>
     </>
   );
