@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import Modal from 'react-modal';
 
-const StyledButton = styled.button<{ color: string }>`
-  background-color: ${({ color }) => color};
+const StyledButton = styled.button<{ color: string, disabled: boolean }>`
+  background-color: ${({ color, disabled }) => disabled ? 'gray' : color};
   margin-top: 20px;
   color: #fff;
   border: none;
@@ -16,6 +16,8 @@ const StyledButton = styled.button<{ color: string }>`
   border-radius: 20px;
   border: 1px solid #ccc;
   box-shadow: -4px 4px 10px 0px rgba(0, 0, 0, 0.5);
+  opacity: ${({ disabled }) => disabled ? 0.5 : 1};
+  pointer-events: ${({ disabled }) => disabled ? 'none' : 'auto'};
 
   &:hover {
     opacity: 0.8;
@@ -34,6 +36,7 @@ interface VoteButtonProps {
   setGender: (gender: string) => void;
   ethnicity: string;
   setEthnicity: (ethnicity: string) => void;
+  disabled: boolean;
 }
 
 const VoteButton = ({
@@ -43,7 +46,8 @@ const VoteButton = ({
   gender,
   setGender,
   ethnicity,
-  setEthnicity
+  setEthnicity,
+  disabled
 }: VoteButtonProps) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [showError, setShowError] = useState<boolean>(false);
@@ -64,7 +68,7 @@ const VoteButton = ({
 
   return (
     <>
-      <StyledButton color={color} onClick={handleClick}>
+      <StyledButton color={color} disabled={disabled} onClick={handleClick}>
         {label}
       </StyledButton>
 

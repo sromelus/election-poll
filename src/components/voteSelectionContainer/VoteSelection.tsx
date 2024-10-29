@@ -97,6 +97,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
     const [showThankYou, setShowThankYou] = useState<{show: boolean, candidate: string}>({show: false, candidate: ''})
     const [shareLinkCopied, setShareLinkCopied] = useState<string>('copy link')
     const [showSocialShareButtons, setShowSocialShareButtons] = useState<boolean>(false)
+    const [disabledVote, setDisabledVote] = useState<boolean>(false)
     const URL_ENCODED_LINK = 'Show+your+support+for+your+favorite+candidate+in+this+poll.+https%3A%2F%2Fwww.sprunoffpolling.com%0D%0A'
 
     useEffect(() => {
@@ -150,6 +151,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
     }
 
     const handleResetVotes = (candidate: string) => {
+        setDisabledVote(true)
         setShowThankYou({show: true, candidate: candidate})
         setGender('')
         setEthnicity('')
@@ -179,6 +181,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
                     setGender={setGender}
                     ethnicity={ethnicity}
                     setEthnicity={setEthnicity}
+                    disabledVote={disabledVote}
                 />
                 <CandidateCard
                     label="Kamala"
@@ -189,6 +192,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
                     setGender={setGender}
                     ethnicity={ethnicity}
                     setEthnicity={setEthnicity}
+                    disabledVote={disabledVote}
                 />
             </CandidateCardContainer>
 

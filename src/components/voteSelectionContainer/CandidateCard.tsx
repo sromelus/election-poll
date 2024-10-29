@@ -24,6 +24,7 @@ interface CandidateCardProps {
   setGender: (gender: string) => void;
   ethnicity: string;
   setEthnicity: (ethnicity: string) => void;
+  disabledVote: boolean;
 }
 
 const CandidateCard = ({
@@ -34,13 +35,15 @@ const CandidateCard = ({
   gender,
   setGender,
   ethnicity,
-  setEthnicity
+  setEthnicity,
+  disabledVote
 }: CandidateCardProps) => (
   <Card>
     <div className="image_container">
         <img src={image} alt={`${label}'s img`} style={{ width: '100%', borderRadius: '300px' }} />
     </div>
     <VoteButton
+      disabled={disabledVote}
       label={label}
       color={button_color}
       onClick={onVote}
