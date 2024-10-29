@@ -21,7 +21,7 @@ function App() {
       <Header />
       <VoteSelection />
       <StyledFooter>
-        © 2024 unofficalpoll.com
+        © 2024 sprunoffpolling.com | <a href="mailto:sprunoffpolling@gmail.com">Contact Me</a> | <a href="https://www.facebook.com/sprunoffpolling">Share with Friends</a>
       </StyledFooter>
     </AppContainer>
   );

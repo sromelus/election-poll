@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import CandidateCard from './CandidateCard';
 import ProgressBar from './ProgressBar';
 import styled from 'styled-components';
