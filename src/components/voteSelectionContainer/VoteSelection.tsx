@@ -97,7 +97,8 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
     const [showThankYou, setShowThankYou] = useState<{show: boolean, candidate: string}>({show: false, candidate: ''})
     const [shareLinkCopied, setShareLinkCopied] = useState<string>('copy link')
     const [showSocialShareButtons, setShowSocialShareButtons] = useState<boolean>(false)
-    const [disabledVote, setDisabledVote] = useState<boolean>(false)
+    const [disabledVote, setDisabledVote] = useState<boolean>(true)
+    const [showAlreadyVoted, setShowAlreadyVoted] = useState<boolean>(false)
     const URL_ENCODED_LINK = 'Show+your+support+for+your+favorite+candidate+in+this+poll.+https%3A%2F%2Fwww.sprunoffpolling.com%0D%0A'
 
     useEffect(() => {
@@ -106,11 +107,18 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
     }, [trumpPollNumbers, kamalaPollNumbers, showShareLink]);
 
     const getVotes = () => {
-        fetch('http://localhost:8080/api/votes')
+        fetch('http://localhost:8080/api/votes', {
+            credentials: 'include'
+        })
             .then(response => response.json())
             .then(data => {
-                setTrumpPollNumbers(data.trump)
-                setKamalaPollNumbers(data.kamala)
+                setTrumpPollNumbers(data.voteTally.trump)
+                setKamalaPollNumbers(data.voteTally.kamala)
+                setDisabledVote(data.visitedUser.disabledVote)
+                if(data.visitedUser.disabledVote) {
+                    setShowAlreadyVoted(true)
+                    setShowSocialShareButtons(true)
+                }
             })
             .catch(error => {
                 console.error('Error fetching vote selection data:', error);
@@ -128,13 +136,19 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
         }
 
         fetch('http://localhost:8080/api/votes', {
+            credentials: 'include',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data)
         })
-    }
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => {
+            console.error('Error submitting vote:', error);
+        });
+}
 
     const updateMaxPercentageReached = () => {
         const highestPollPercentage = Math.max(trumpPollNumbers, kamalaPollNumbers)
@@ -231,6 +245,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
 
             {showSocialShareButtons && (
                 <ShareLinkContainer>
+                    {showAlreadyVoted && <p style={{color: 'red'}}>You have already voted!</p>}
                     <p>Share this link with your friends!</p>
                     <a href="https://www.sprunoffpolling.com">sprunoffpolling.com</a>
                     <button
