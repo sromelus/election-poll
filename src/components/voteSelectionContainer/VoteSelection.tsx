@@ -6,6 +6,7 @@ import trumpImage from '../../trump_img.png'
 import kamalaImage from '../../kamala_img.png'
 import Confetti from 'react-confetti';
 import SocialShareButtons from '../SocialShareButtons';
+import { capitalize } from '../../lib/textUtils';
 
 const CandidateCardContainer = styled.div`
   display: flex;
@@ -97,7 +98,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
     const [showThankYou, setShowThankYou] = useState<{show: boolean, candidate: string}>({show: false, candidate: ''})
     const [shareLinkCopied, setShareLinkCopied] = useState<string>('copy link')
     const [showSocialShareButtons, setShowSocialShareButtons] = useState<boolean>(false)
-    const [disabledVote, setDisabledVote] = useState<boolean>(true)
+    const [disabledVote, setDisabledVote] = useState<boolean>(false)
     const [showAlreadyVoted, setShowAlreadyVoted] = useState<boolean>(false)
     const URL_ENCODED_LINK = 'Show+your+support+for+your+favorite+candidate+in+this+poll.+https%3A%2F%2Fwww.sprunoffpolling.com%0D%0A'
 
@@ -127,9 +128,6 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
 
     const postVote = (candidate: string) => {
         const data = {
-            visitedUser: {
-                disabledVote: disabledVote
-            },
             candidate: candidate,
             voterGender: gender,
             voterEthnicity: ethnicity,
@@ -236,7 +234,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
             {showThankYou.show && (
                 <>
                     <ThankYouContainer>
-                        <p>You submitted 1 votes for {showThankYou.candidate}</p>
+                        <p>You submitted 1 votes for {capitalize(showThankYou.candidate)}</p>
                         <p>Thank you for showing support!</p>
                     </ThankYouContainer>
                     <Confetti />
@@ -247,6 +245,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
                 <ShareLinkContainer>
                     {showAlreadyVoted && <p style={{color: 'red'}}>You have already voted!</p>}
                     <p>Share this link with your friends!</p>
+                    <p>so they can vote too!</p>
                     <a href="https://www.sprunoffpolling.com">sprunoffpolling.com</a>
                     <button
                         style={{marginLeft: '10px', fontWeight: 'bold', border: '1px solid lightblue', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer'}}

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { useState } from 'react';
 import Modal from 'react-modal';
+import { capitalize } from '../../lib/textUtils';
 
 const StyledButton = styled.button<{ color: string, disabled: boolean }>`
   background-color: ${({ color, disabled }) => disabled ? 'gray' : color};
@@ -57,11 +58,6 @@ const StyledLabel = styled.label<{ checked: boolean, color: string }>`
     background: ${color || '#666'};
     color: white;
     border-color: ${color || '#666'};
-
-    &::after {
-      content: '✓';
-      margin-left: 5px;
-    }
   `}
 `;
 
@@ -245,7 +241,7 @@ const VoteButton = ({
             </div>
           </div>
 
-          <p>Are you sure you want to show support for {label}?</p>
+          <p>Are you sure you want to show support for {capitalize(label)}?</p>
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
             <button
               onClick={() => setIsModalOpen(false)}
