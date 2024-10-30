@@ -141,12 +141,19 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
             },
             body: JSON.stringify(data)
         })
-        .then(response => response.json())
-        .then(data => console.log(data))
+        .then(async response => {
+            if(response.status === 429) {
+                alert('You have voted too many times.')
+            }
+            return response.json()
+        })
+        .then(data => {
+            console.log(data);
+        })
         .catch(error => {
             console.error('Error submitting vote:', error);
         });
-}
+    }
 
     const updateMaxPercentageReached = () => {
         const highestPollPercentage = Math.max(trumpPollNumbers, kamalaPollNumbers)
