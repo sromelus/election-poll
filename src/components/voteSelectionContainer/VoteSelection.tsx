@@ -136,10 +136,12 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
                 if(data.visitedUser.disabledVote) {
                     setShowAlreadyVoted(true)
                     setShowSocialShareButtons(true)
+                    setAlertMessage('You have already voted!')
                 }
 
                 if(data.visitedUser.isRequestFromOutsideUS) {
                     setShowOutsideUS(true)
+                    setAlertMessage('voting is disabled for users outside the US')
                 }
             })
             .catch(error => {
