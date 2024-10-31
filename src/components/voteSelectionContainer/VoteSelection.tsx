@@ -7,6 +7,7 @@ import kamalaImage from '../../kamala_img.png'
 import Confetti from 'react-confetti';
 import SocialShareButtons from '../SocialShareButtons';
 import { capitalize } from '../../lib/textUtils';
+import AlertMessage from '../AlertMessage';
 
 const CandidateCardContainer = styled.div`
   display: flex;
@@ -85,6 +86,20 @@ const ShareLinkContainer = styled(ThankYouContainer)`
     animation: none;
 `;
 
+const CloseButton = styled.button`
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 50px;
+    &:hover {
+        color: #666
+    }
+`;
+
 interface VoteSelectionProps {
     showShareLink: boolean;
 }
@@ -100,6 +115,8 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
     const [showSocialShareButtons, setShowSocialShareButtons] = useState<boolean>(false)
     const [disabledVote, setDisabledVote] = useState<boolean>(true)
     const [showAlreadyVoted, setShowAlreadyVoted] = useState<boolean>(false)
+    const [showOutsideUS, setShowOutsideUS] = useState<boolean>(false)
+    const [alertMessage, setAlertMessage] = useState<string>('');
     const URL_ENCODED_LINK = 'Show+your+support+for+your+favorite+candidate+in+this+poll.+https%3A%2F%2Fwww.sprunoffpolling.com%0D%0A'
 
     useEffect(() => {
@@ -120,6 +137,12 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
                     setShowAlreadyVoted(true)
                     setShowSocialShareButtons(true)
                 }
+
+                if(data.visitedUser.isRequestFromOutsideUS) {
+                    setShowOutsideUS(true)
+                }
+
+                console.log('getVotes', data)
             })
             .catch(error => {
                 console.error('Error fetching vote selection data:', error);
@@ -148,7 +171,11 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
             return response.json()
         })
         .then(data => {
-            console.log(data);
+            setAlertMessage(data.message);
+            setTimeout(() => {
+                setAlertMessage('');
+            }, 5000);
+            console.log('postVote', data);
         })
         .catch(error => {
             console.error('Error submitting vote:', error);
@@ -198,6 +225,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
 
     return (
         <>
+            <AlertMessage message={alertMessage} />
             <CandidateCardContainer>
                 <CandidateCard
                     label="Trump"
@@ -208,7 +236,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
                     setGender={setGender}
                     ethnicity={ethnicity}
                     setEthnicity={setEthnicity}
-                    disabledVote={disabledVote}
+                    disabledVote={disabledVote || showOutsideUS}
                 />
                 <CandidateCard
                     label="Kamala"
@@ -219,7 +247,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
                     setGender={setGender}
                     ethnicity={ethnicity}
                     setEthnicity={setEthnicity}
-                    disabledVote={disabledVote}
+                    disabledVote={disabledVote || showOutsideUS}
                 />
             </CandidateCardContainer>
 
@@ -250,9 +278,10 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
 
             {showSocialShareButtons && (
                 <ShareLinkContainer>
+                    <CloseButton onClick={() => setShowSocialShareButtons(false)}>x</CloseButton>
                     {showAlreadyVoted && <p style={{color: 'red'}}>You have already voted!</p>}
                     <p>Share this link with your friends!</p>
-                    <p>so they can vote too!</p>
+                    <p>so they can poll too!</p>
                     <a href="https://www.sprunoffpolling.com">sprunoffpolling.com</a>
                     <button
                         style={{marginLeft: '10px', fontWeight: 'bold', border: '1px solid lightblue', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer'}}
