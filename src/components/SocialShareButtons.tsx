@@ -29,4 +29,4 @@ const SocialShareButtons = ({ urlEncodedLink }: SocialShareButtonsProps) => {
     );
 };
 
-export default SocialShareButtons; 
+export default SocialShareButtons;
