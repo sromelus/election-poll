@@ -141,8 +141,6 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
                 if(data.visitedUser.isRequestFromOutsideUS) {
                     setShowOutsideUS(true)
                 }
-
-                console.log('getVotes', data)
             })
             .catch(error => {
                 console.error('Error fetching vote selection data:', error);
@@ -166,7 +164,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
         })
         .then(async response => {
             if(response.status === 429) {
-                alert('You have voted too many times.')
+                setAlertMessage('You have voted too many times.');
             }
             return response.json()
         })
@@ -175,7 +173,6 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
             setTimeout(() => {
                 setAlertMessage('');
             }, 5000);
-            console.log('postVote', data);
         })
         .catch(error => {
             console.error('Error submitting vote:', error);
