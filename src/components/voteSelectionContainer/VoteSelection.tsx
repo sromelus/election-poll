@@ -129,7 +129,13 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
         fetch(`${config.apiUrl}/api/votes`, {
             credentials: 'include'
         })
-            .then(response => response.json())
+            .then(response => {
+                if (response.status === 503) {
+                    setAlertMessage('We are currently under maintenance. Please try again later.');
+                    throw new Error('Maintenance mode');
+                }
+                return response.json();
+            })
             .then(data => {
                 setTrumpPollNumbers(data.voteTally.trump)
                 setKamalaPollNumbers(data.voteTally.kamala)
@@ -168,6 +174,10 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
         .then(async response => {
             if(response.status === 429) {
                 setAlertMessage('You have voted too many times.');
+            }
+            if(response.status === 503) {
+                setAlertMessage('We are currently under maintenance. Please try again later.');
+                throw new Error('Maintenance mode');
             }
             return response.json()
         })

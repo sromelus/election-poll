@@ -15,25 +15,29 @@ const StyledFooter = styled.footer`
   margin-top: auto;
   text-align: center;
   padding: 1rem;
+
+  @media (max-width: 768px) {
+    margin: 25px;
+  }
 `;
 
 Modal.setAppElement('#root');
 
 function App() {
-  const [showShareLink, setShowShareLink] = useState<boolean>(false)
+  const [showShareLink, setShowShareLink] = useState<boolean>(false);
 
   const handleShowShareLink = () => {
-    setShowShareLink(!showShareLink)
-  }
+    setShowShareLink(!showShareLink);
+  };
 
   return (
     <AppContainer>
       <Header />
-      <VoteSelection showShareLink={showShareLink}/>
+      <VoteSelection showShareLink={showShareLink} />
       <StyledFooter>
-        © 2024 sprunoffpolling.com <span>| </span>
-         <a href="mailto:sprunoffpolling@gmail.com">Contact Me</a> <span>| </span>
-         <span style={{cursor: 'pointer', textDecoration: 'underline', color: 'blue', display: "inline-block"}} onClick={handleShowShareLink}>Share with Friends</span>
+        © 2024 pollnest.com <span>| </span>
+        <a href="mailto:support@pollnest.com">Contact Me</a> <span>| </span>
+        <span style={{cursor: 'pointer', textDecoration: 'underline', color: 'blue', display: "inline-block"}} onClick={handleShowShareLink}>Share with Friends</span>
       </StyledFooter>
       <Analytics />
     </AppContainer>
