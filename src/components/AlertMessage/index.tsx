@@ -11,7 +11,7 @@ const AlertContainer = styled.div`
     border-radius: 4px;
     border: 1px solid #f5c6cb;
     z-index: 1000;
-    animation: fadeOut 10s ease-in-out;
+    animation: fadeOut 20s ease-in-out;
     animation-fill-mode: forwards;
 
     @keyframes fadeOut {
