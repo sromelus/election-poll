@@ -125,7 +125,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
     }, [trumpPollNumbers, kamalaPollNumbers, showShareLink]);
 
     const getVotes = () => {
-        fetch('http://localhost:8080/api/votes', {
+        fetch('https://polling-app-440320.uc.r.appspot.com/api/votes', {
             credentials: 'include'
         })
             .then(response => response.json())
@@ -156,7 +156,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
             voterEthnicity: ethnicity,
         }
 
-        fetch('http://localhost:8080/api/votes', {
+        fetch('https://polling-app-440320.uc.r.appspot.com/api/votes', {
             credentials: 'include',
             method: 'POST',
             headers: {
