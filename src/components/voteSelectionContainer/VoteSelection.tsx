@@ -8,6 +8,7 @@ import Confetti from 'react-confetti';
 import SocialShareButtons from '../SocialShareButtons';
 import { capitalize } from '../../lib/textUtils';
 import AlertMessage from '../AlertMessage';
+import { config } from '../../config/env';
 
 const CandidateCardContainer = styled.div`
   display: flex;
@@ -125,7 +126,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
     }, [trumpPollNumbers, kamalaPollNumbers, showShareLink]);
 
     const getVotes = () => {
-        fetch('https://polling-app-440320.uc.r.appspot.com/api/votes', {
+        fetch(`${config.apiUrl}/api/votes`, {
             credentials: 'include'
         })
             .then(response => response.json())
@@ -141,7 +142,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
 
                 if(data.visitedUser.isRequestFromOutsideUS) {
                     setShowOutsideUS(true)
-                    setAlertMessage('voting is disabled for users outside the US')
+                    setAlertMessage('Voting is disabled for users outside the US.')
                 }
             })
             .catch(error => {
@@ -156,7 +157,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
             voterEthnicity: ethnicity,
         }
 
-        fetch('https://polling-app-440320.uc.r.appspot.com/api/votes', {
+        fetch(`${config.apiUrl}/api/votes`, {
             credentials: 'include',
             method: 'POST',
             headers: {
