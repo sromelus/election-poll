@@ -240,10 +240,13 @@ const VoteButton = ({
               </StyledLabel>
             </div>
           </div>
-          <div style={{ marginBottom: '20px' }}>
-            <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>Share support message with community:</div>
+          <div>
+            <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>Share your opinion with community: <small style={{fontWeight: 'normal'}}>(optional)</small></div>
+            <p><small>What you write will be anonymous and shared with the community and disappear in less than a minute.</small></p>
+
             <input type="text" style={{width: '90%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc', marginBottom: '10px'}} 
             placeholder={`I love my [candidate] so much!`} />
+            
           </div>
           <p>Are you sure you want to show support for {capitalize(label)}?</p>
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
