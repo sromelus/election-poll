@@ -114,7 +114,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
     const [showThankYou, setShowThankYou] = useState<{show: boolean, candidate: string}>({show: false, candidate: ''})
     const [shareLinkCopied, setShareLinkCopied] = useState<string>('copy link')
     const [showSocialShareButtons, setShowSocialShareButtons] = useState<boolean>(false)
-    const [disabledVote, setDisabledVote] = useState<boolean>(true)
+    const [disabledVote, setDisabledVote] = useState<boolean>(false)
     const [showAlreadyVoted, setShowAlreadyVoted] = useState<boolean>(false)
     const [showOutsideUS, setShowOutsideUS] = useState<boolean>(false)
     const [alertMessage, setAlertMessage] = useState<string>('');
