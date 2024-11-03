@@ -54,8 +54,10 @@ const Header = () => {
           </TitleContainer>
         </HeaderContainer>
           <div style={{textAlign: 'center', width: '90%', margin: '-20px auto', fontSize: '10px', borderBottom: '1px solid #ccc'}}>
-              <p>This is a non-official poll. It is not affiliated with any political campaign or organization.</p>
+              <p>This is a non-official poll. It is not affiliated with any political organization.</p>
               <p>It is a fun way to see how people are voting in the 2024 presidential election.</p>
+              <p>Votes are anonymous. No personal information is collected.</p>
+              <p>Live messaging and map are coming soon!!</p>
           </div>
       </div>
     </>

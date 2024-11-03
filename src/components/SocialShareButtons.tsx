@@ -13,7 +13,7 @@ const SocialShareButtons = ({ urlEncodedLink }: SocialShareButtonsProps) => {
             <a href={`https://www.facebook.com/sharer/sharer.php?display=page&u=${urlEncodedLink}`}>
                 <FaFacebook size={24} color="#1877F2" />
             </a>
-            <a href={`https://x.com/share?text=${urlEncodedLink}&url=https://sprunoffpolling.com/`}>
+            <a href={`https://x.com/share?text=${urlEncodedLink}&url=https://pollnest.com/`}>
                 <FaTwitter size={24} color="#1DA1F2" />
             </a>
             <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${urlEncodedLink}`}>
