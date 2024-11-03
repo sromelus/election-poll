@@ -240,7 +240,7 @@ const VoteButton = ({
               </StyledLabel>
             </div>
           </div>
-
+          {/* <div>input messages</div> */}
           <p>Are you sure you want to show support for {capitalize(label)}?</p>
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
             <button
