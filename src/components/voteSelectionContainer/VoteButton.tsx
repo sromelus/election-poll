@@ -145,23 +145,23 @@ const VoteButton = ({
           <div style={{ marginBottom: '20px' }}>
             <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>Gender:</div>
             <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
-              <StyledLabel checked={gender === 'men'} color={color}>
+              <StyledLabel checked={gender === 'male'} color={color}>
                 <input
                   type="radio"
                   name="gender"
-                  value="men"
-                  checked={gender === 'men'}
+                  value="male"
+                  checked={gender === 'male'}
                   onChange={(e) => setGender(e.target.value)}
                   required
                 />
-                Men
+                Male
               </StyledLabel>
-              <StyledLabel checked={gender === 'women'} color={color}>
+              <StyledLabel checked={gender === 'female'} color={color}>
                 <input
                   type="radio"
                   name="gender"
-                  value="women"
-                  checked={gender === 'women'}
+                  value="female"
+                  checked={gender === 'female'}
                   onChange={(e) => setGender(e.target.value)}
                 />
                 Female
@@ -211,12 +211,12 @@ const VoteButton = ({
                   onChange={(e) => setEthnicity(e.target.value)}
                 /> Black
               </StyledLabel>
-              <StyledLabel checked={ethnicity === 'spanish'} color={color}>
+              <StyledLabel checked={ethnicity === 'hispanic'} color={color}>
                 <input
                   type="radio"
                   name="ethnicity"
-                  value="spanish"
-                  checked={ethnicity === 'spanish'}
+                  value="hispanic"
+                  checked={ethnicity === 'hispanic'}
                   onChange={(e) => setEthnicity(e.target.value)}
                 /> Hispanic
               </StyledLabel>

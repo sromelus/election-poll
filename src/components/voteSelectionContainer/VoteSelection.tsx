@@ -121,8 +121,29 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
     const URL_ENCODED_LINK = 'Show+your+support+for+your+favorite+candidate+in+this+poll.+https%3A%2F%2Fwww.sprunoffpolling.com%0D%0A'
 
     useEffect(() => {
-        getVotes()
-        setShowSocialShareButtons(showShareLink)
+        getVotes();
+        setShowSocialShareButtons(showShareLink);
+
+        // WebSocket setup
+        const ws = new WebSocket(`${config.websocketUrl}/api/votes`);
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.voteTally) {
+                setTrumpPollNumbers(data.voteTally.trump || 0);
+                setKamalaPollNumbers(data.voteTally.kamala || 0);
+            }
+        };
+
+        ws.onerror = (error) => {
+            console.error('WebSocket error:', error);
+        };
+
+        // Clean up WebSocket connection when component unmounts
+        return () => {
+            ws.close();
+        };
+
     }, [trumpPollNumbers, kamalaPollNumbers, showShareLink]);
 
     const getVotes = () => {
