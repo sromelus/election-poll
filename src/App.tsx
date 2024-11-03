@@ -2,8 +2,18 @@ import { Analytics } from '@vercel/analytics/react';
 import Modal from 'react-modal';
 import Header from './components/Header';
 import VoteSelection from './components/voteSelectionContainer/VoteSelection';
+import ChatBubble from './components/ChatBubble';
 import { styled } from 'styled-components';
 import { useState } from 'react';
+
+const ChatContainer = styled.div`
+  position: absolute;
+  top: 0px;
+
+  @media (min-width: 768px) {
+    top: 120px;
+  }
+`;
 
 const AppContainer = styled.div`
   min-height: 100vh;
@@ -34,6 +44,13 @@ function App() {
     <AppContainer>
       <Header />
       <VoteSelection showShareLink={showShareLink} />
+      {/* <ChatContainer>
+        <ChatBubble message="Hello there!" />
+        <ChatBubble message="Hi! How are you?" />
+        <ChatBubble message="I'm fine, thank you!" />
+        <ChatBubble message="What's your name?" />
+        <ChatBubble message="What's your name?" />
+      </ChatContainer> */}
       <StyledFooter>
         © 2024 pollnest.com <span>| </span>
         <a href="mailto:support@pollnest.com">Contact Me</a> <span>| </span>
