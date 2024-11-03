@@ -118,7 +118,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
     const [showAlreadyVoted, setShowAlreadyVoted] = useState<boolean>(false)
     const [showOutsideUS, setShowOutsideUS] = useState<boolean>(false)
     const [alertMessage, setAlertMessage] = useState<string>('');
-    const URL_ENCODED_LINK = 'Show+your+support+for+your+favorite+candidate+in+this+poll.+https%3A%2F%2Fwww.sprunoffpolling.com%0D%0A'
+    const URL_ENCODED_LINK = 'Show+your+support+for+your+favorite+candidate+in+this+poll.+https%3A%2F%2Fwww.pollnest.com%0D%0A'
 
     useEffect(() => {
         getVotes();
@@ -247,7 +247,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
     }
 
     const handleCopyShareLink = () => {
-        navigator.clipboard.writeText('Show your support for your favorite candidate in this poll! https://www.sprunoffpolling.com')
+        navigator.clipboard.writeText('Show your support for your favorite candidate in this poll! https://www.pollnest.com')
         setShareLinkCopied('copied!')
         setTimeout(() => {
             setShareLinkCopied('copy link')
@@ -313,7 +313,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
                     {showAlreadyVoted && <p style={{color: 'red'}}>You have already voted!</p>}
                     <p>Share this link with your friends!</p>
                     <p>so they can poll too!</p>
-                    <a href="https://www.sprunoffpolling.com">sprunoffpolling.com</a>
+                    <a href='https://www.pollnest.com'>pollnest.com</a>
                     <button
                         style={{marginLeft: '10px', fontWeight: 'bold', border: '1px solid lightblue', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer'}}
                         onClick={handleCopyShareLink}
