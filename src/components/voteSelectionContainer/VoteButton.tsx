@@ -261,14 +261,15 @@ const VoteButton = ({
           </div>
           <div>
             <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>Share your opinion with community: <small style={{fontWeight: 'normal'}}>(optional)</small></div>
-            <p><small>What you write will be anonymous and shared with the community and disappear in less than a minute.</small></p>
+            <p><small>Your message will be anonymous and shared with the community.</small></p>
 
-            <StyledInput 
+            <StyledInput
               type="text"
               color={color}
               placeholder={`I love my [candidate] so much!`}
               value={supportMessage}
               onChange={(e) => setSupportMessage(e.target.value)}
+              maxLength={150}
             />
 
           </div>

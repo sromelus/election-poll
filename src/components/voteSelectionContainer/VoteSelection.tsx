@@ -111,6 +111,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
     const [gender, setGender] = useState<string>('');
     const [ethnicity, setEthnicity] = useState<string>('');
     const [supportMessage, setSupportMessage] = useState<string>('');
+    const [supportMessageContainer, setSupportMessageContainer] = useState<string[]>([]);
     const [maxPercentage, setMaxPercentage] = useState<number>(100)
     const [showThankYou, setShowThankYou] = useState<{show: boolean, candidate: string}>({show: false, candidate: ''})
     const [shareLinkCopied, setShareLinkCopied] = useState<string>('copy link')
@@ -131,8 +132,14 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
             if (data.voteTally) {
-                setTrumpPollNumbers(data.voteTally.trump || 0);
-                setKamalaPollNumbers(data.voteTally.kamala || 0);
+                setTrumpPollNumbers(data.voteTally.trump || trumpPollNumbers + 1);
+                setKamalaPollNumbers(data.voteTally.kamala || kamalaPollNumbers + 1);
+                if(data.supportMessage) {
+                    if(supportMessageContainer.length > 10) {
+                        setSupportMessageContainer(prev => prev.slice(1))
+                    }
+                    setSupportMessageContainer(prev => [...prev, data.supportMessage])
+                }
             }
         };
 
@@ -183,6 +190,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
             candidate: candidate,
             voterGender: gender,
             voterEthnicity: ethnicity,
+            supportMessage: supportMessage
         }
 
         fetch(`${config.apiUrl}/api/votes`, {
