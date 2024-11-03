@@ -103,42 +103,37 @@ const CloseButton = styled.button`
 
 interface VoteSelectionProps {
     showShareLink: boolean;
+    addChatMessage: (messages: string) => void;
 }
 
-const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
+const VoteSelection = ({ showShareLink, addChatMessage }: VoteSelectionProps) => {
     const [trumpPollNumbers, setTrumpPollNumbers] = useState<number>(0);
     const [kamalaPollNumbers, setKamalaPollNumbers] = useState<number>(0);
     const [gender, setGender] = useState<string>('');
     const [ethnicity, setEthnicity] = useState<string>('');
-    const [supportMessage, setSupportMessage] = useState<string>('');
-    const [supportMessageContainer, setSupportMessageContainer] = useState<string[]>([]);
+    const [chatMessage, setChatMessage] = useState<string>('');
     const [maxPercentage, setMaxPercentage] = useState<number>(100)
     const [showThankYou, setShowThankYou] = useState<{show: boolean, candidate: string}>({show: false, candidate: ''})
     const [shareLinkCopied, setShareLinkCopied] = useState<string>('copy link')
     const [showSocialShareButtons, setShowSocialShareButtons] = useState<boolean>(false)
-    const [disabledVote, setDisabledVote] = useState<boolean>(false)
+    const [disabledVote, setDisabledVote] = useState<boolean>(true)
     const [showAlreadyVoted, setShowAlreadyVoted] = useState<boolean>(false)
     const [showOutsideUS, setShowOutsideUS] = useState<boolean>(false)
     const [alertMessage, setAlertMessage] = useState<string>('');
     const URL_ENCODED_LINK = 'Show+your+support+for+your+favorite+candidate+in+this+poll.+https%3A%2F%2Fwww.pollnest.com%0D%0A'
 
-    useEffect(() => {
-        getVotes();
-        setShowSocialShareButtons(showShareLink);
 
-        // WebSocket setup
+    useEffect(() => {
         const ws = new WebSocket(`${config.websocketUrl}/api/votes`);
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
             if (data.voteTally) {
-                setTrumpPollNumbers(data.voteTally.trump || trumpPollNumbers + 1);
-                setKamalaPollNumbers(data.voteTally.kamala || kamalaPollNumbers + 1);
-                if(data.supportMessage) {
-                    if(supportMessageContainer.length > 10) {
-                        setSupportMessageContainer(prev => prev.slice(1))
-                    }
-                    setSupportMessageContainer(prev => [...prev, data.supportMessage])
+                setTrumpPollNumbers(data.voteTally.trump);
+                setKamalaPollNumbers(data.voteTally.kamala);
+                if(data.chatMessage) {
+                    const message = data.chatMessage
+                    addChatMessage(message)
                 }
             }
         };
@@ -147,12 +142,16 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
             console.error('WebSocket error:', error);
         };
 
-        // Clean up WebSocket connection when component unmounts
         return () => {
             ws.close();
         };
+    }, [addChatMessage]);
 
-    }, [trumpPollNumbers, kamalaPollNumbers, showShareLink]);
+    useEffect(() => {
+        getVotes();
+        setShowSocialShareButtons(showShareLink)
+
+    }, [showShareLink]);
 
     const getVotes = () => {
         fetch(`${config.apiUrl}/api/votes`, {
@@ -190,7 +189,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
             candidate: candidate,
             voterGender: gender,
             voterEthnicity: ethnicity,
-            supportMessage: supportMessage
+            chatMessage: chatMessage
         }
 
         fetch(`${config.apiUrl}/api/votes`, {
@@ -247,8 +246,6 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
     const handleResetVotes = (candidate: string) => {
         setDisabledVote(true)
         setShowThankYou({show: true, candidate: candidate})
-        setGender('')
-        setEthnicity('')
         setTimeout(() => {
             setShowThankYou({show: false, candidate: ''})
             setShowSocialShareButtons(true)
@@ -276,8 +273,8 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
                     setGender={setGender}
                     ethnicity={ethnicity}
                     setEthnicity={setEthnicity}
-                    supportMessage={supportMessage}
-                    setSupportMessage={setSupportMessage}
+                    chatMessage={chatMessage}
+                    setChatMessage={setChatMessage}
                     disabledVote={disabledVote || showOutsideUS}
                 />
                 <CandidateCard
@@ -289,8 +286,8 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
                     setGender={setGender}
                     ethnicity={ethnicity}
                     setEthnicity={setEthnicity}
-                    supportMessage={supportMessage}
-                    setSupportMessage={setSupportMessage}
+                    chatMessage={chatMessage}
+                    setChatMessage={setChatMessage}
                     disabledVote={disabledVote || showOutsideUS}
                 />
             </CandidateCardContainer>
@@ -323,7 +320,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
             {showSocialShareButtons && (
                 <ShareLinkContainer>
                     <CloseButton onClick={() => setShowSocialShareButtons(false)}>x</CloseButton>
-                    {showAlreadyVoted && <p style={{color: 'red'}}>You have already voted!</p>}
+                    {showAlreadyVoted && <p style={{color: 'red'}}>Yay! You took the poll!</p>}
                     <p>Share this link with your friends!</p>
                     <p>so they can poll too!</p>
                     <a href='https://www.pollnest.com'>pollnest.com</a>

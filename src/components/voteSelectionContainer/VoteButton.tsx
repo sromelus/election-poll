@@ -83,8 +83,8 @@ interface VoteButtonProps {
   setGender: (gender: string) => void;
   ethnicity: string;
   setEthnicity: (ethnicity: string) => void;
-  supportMessage: string;
-  setSupportMessage: (supportMessage: string) => void;
+  chatMessage: string;
+  setChatMessage: (chatMessage: string) => void;
   disabled: boolean;
 }
 
@@ -96,8 +96,8 @@ const VoteButton = ({
   setGender,
   ethnicity,
   setEthnicity,
-  supportMessage,
-  setSupportMessage,
+  chatMessage,
+  setChatMessage,
   disabled,
 }: VoteButtonProps) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -106,7 +106,7 @@ const VoteButton = ({
   const handleClick = () => {
     setIsModalOpen(true);
     setShowError(false);
-    setSupportMessage('');
+    setChatMessage('');
   };
 
   const handleConfirm = () => {
@@ -267,9 +267,9 @@ const VoteButton = ({
               type="text"
               color={color}
               placeholder={`I love my [candidate] so much!`}
-              value={supportMessage}
-              onChange={(e) => setSupportMessage(e.target.value)}
-              maxLength={150}
+              value={chatMessage}
+              onChange={(e) => setChatMessage(e.target.value)}
+              maxLength={60}
             />
 
           </div>
