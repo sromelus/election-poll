@@ -61,6 +61,20 @@ const StyledLabel = styled.label<{ checked: boolean, color: string }>`
   `}
 `;
 
+const StyledInput = styled.input<{ color: string }>`
+  width: 90%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+
+  &:focus {
+    outline: none;
+    border-color: ${({ color }) => color};
+    box-shadow: ${({ color }) => `0 0 0 2px ${color}33`};
+  }
+`;
+
 interface VoteButtonProps {
   label: string;
   color: string;
@@ -69,6 +83,8 @@ interface VoteButtonProps {
   setGender: (gender: string) => void;
   ethnicity: string;
   setEthnicity: (ethnicity: string) => void;
+  supportMessage: string;
+  setSupportMessage: (supportMessage: string) => void;
   disabled: boolean;
 }
 
@@ -80,7 +96,9 @@ const VoteButton = ({
   setGender,
   ethnicity,
   setEthnicity,
-  disabled
+  supportMessage,
+  setSupportMessage,
+  disabled,
 }: VoteButtonProps) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [showError, setShowError] = useState<boolean>(false);
@@ -88,6 +106,7 @@ const VoteButton = ({
   const handleClick = () => {
     setIsModalOpen(true);
     setShowError(false);
+    setSupportMessage('');
   };
 
   const handleConfirm = () => {
@@ -244,9 +263,14 @@ const VoteButton = ({
             <div style={{ marginBottom: '10px', fontWeight: 'bold' }}>Share your opinion with community: <small style={{fontWeight: 'normal'}}>(optional)</small></div>
             <p><small>What you write will be anonymous and shared with the community and disappear in less than a minute.</small></p>
 
-            <input type="text" style={{width: '90%', padding: '8px', borderRadius: '4px', border: '1px solid #ccc', marginBottom: '10px'}} 
-            placeholder={`I love my [candidate] so much!`} />
-            
+            <StyledInput 
+              type="text"
+              color={color}
+              placeholder={`I love my [candidate] so much!`}
+              value={supportMessage}
+              onChange={(e) => setSupportMessage(e.target.value)}
+            />
+
           </div>
           <p>Are you sure you want to show support for {capitalize(label)}?</p>
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>

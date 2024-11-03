@@ -110,6 +110,7 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
     const [kamalaPollNumbers, setKamalaPollNumbers] = useState<number>(0);
     const [gender, setGender] = useState<string>('');
     const [ethnicity, setEthnicity] = useState<string>('');
+    const [supportMessage, setSupportMessage] = useState<string>('');
     const [maxPercentage, setMaxPercentage] = useState<number>(100)
     const [showThankYou, setShowThankYou] = useState<{show: boolean, candidate: string}>({show: false, candidate: ''})
     const [shareLinkCopied, setShareLinkCopied] = useState<string>('copy link')
@@ -267,6 +268,8 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
                     setGender={setGender}
                     ethnicity={ethnicity}
                     setEthnicity={setEthnicity}
+                    supportMessage={supportMessage}
+                    setSupportMessage={setSupportMessage}
                     disabledVote={disabledVote || showOutsideUS}
                 />
                 <CandidateCard
@@ -278,6 +281,8 @@ const VoteSelection = ({ showShareLink }: VoteSelectionProps) => {
                     setGender={setGender}
                     ethnicity={ethnicity}
                     setEthnicity={setEthnicity}
+                    supportMessage={supportMessage}
+                    setSupportMessage={setSupportMessage}
                     disabledVote={disabledVote || showOutsideUS}
                 />
             </CandidateCardContainer>

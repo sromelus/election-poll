@@ -24,6 +24,8 @@ interface CandidateCardProps {
   setGender: (gender: string) => void;
   ethnicity: string;
   setEthnicity: (ethnicity: string) => void;
+  supportMessage: string;
+  setSupportMessage: (supportMessage: string) => void;
   disabledVote: boolean;
 }
 
@@ -36,6 +38,8 @@ const CandidateCard = ({
   setGender,
   ethnicity,
   setEthnicity,
+  supportMessage,
+  setSupportMessage,
   disabledVote
 }: CandidateCardProps) => (
   <Card>
@@ -51,6 +55,8 @@ const CandidateCard = ({
       setGender={setGender}
       ethnicity={ethnicity}
       setEthnicity={setEthnicity}
+      supportMessage={supportMessage}
+      setSupportMessage={setSupportMessage}
     />
   </Card>
 );
