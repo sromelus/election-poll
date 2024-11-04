@@ -1,11 +1,11 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import Modal from 'react-modal';
 import Header from './components/Header';
 import VoteSelection from './components/voteSelectionContainer/VoteSelection';
 import ChatBubble from './components/ChatBubble';
 import styled from 'styled-components';
-import { useState } from 'react';
+import AlertMessage from './components/AlertMessage';
 import { config } from './config/env';
 
 const ChatContainer = styled.div`
@@ -83,7 +83,7 @@ function App() {
   const [showShareLink, setShowShareLink] = useState<boolean>(false);
   const [chatMessages, setChatMessages] = useState<string[]>([]);
   const [newMessage, setNewMessage] = useState('');
-
+  const [alertMessage, setAlertMessage] = useState<string>('');
   const handleAddChatMessage = useCallback((messages: []) => {
     setChatMessages(messages);
   }, []);
@@ -112,7 +112,7 @@ function App() {
       return;
     }
 
-    setChatMessages([...chatMessages, newMessage]);
+    // setChatMessages([...chatMessages, newMessage]);
 
     fetch(`${config.apiUrl}/api/votes/chat`, {
         credentials: 'include',
@@ -122,11 +122,13 @@ function App() {
         },
         body: JSON.stringify({ chatMessage: newMessage }),
     })
-    .then((res) => {
-      if (res.ok) {
-        setNewMessage('');
+    .then(res => res.json())
+    .then(data => {
+      if(data.error) {
+        setAlertMessage(data.error)
       }
-    });
+    })
+
     setNewMessage('');
   };
 
@@ -137,6 +139,7 @@ function App() {
   return (
     <AppContainer>
       <Header />
+      <AlertMessage message={alertMessage} />
       <VoteSelection showShareLink={showShareLink} addChatMessages={handleAddChatMessage} />
       <ChatContainer>
         {chatMessages.map((message, index) => (
