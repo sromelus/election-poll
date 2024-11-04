@@ -10,7 +10,7 @@ const BubbleContainer = styled.div`
   justify-content: flex-start;
   margin: 8px 0;
   animation: floatUp 0.3s ease-out;
-  
+
   @keyframes floatUp {
     from {
       opacity: 0;
@@ -35,11 +35,13 @@ const Bubble = styled.div<{ $isLast: boolean }>`
 
 const ChatBubble = ({ message, $isLast = false }: ChatBubbleProps) => {
   return (
-    <BubbleContainer>
-      <Bubble $isLast={$isLast}>
-        {message}
-      </Bubble>
-    </BubbleContainer>
+    <>
+      <BubbleContainer>
+        <Bubble $isLast={$isLast}>
+          {message}
+        </Bubble>
+      </BubbleContainer>
+    </>
   );
 };
 
