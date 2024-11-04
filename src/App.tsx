@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import Modal from 'react-modal';
 import Header from './components/Header';
@@ -6,6 +6,7 @@ import VoteSelection from './components/voteSelectionContainer/VoteSelection';
 import ChatBubble from './components/ChatBubble';
 import styled from 'styled-components';
 import { useState } from 'react';
+import { config } from './config/env';
 
 const ChatContainer = styled.div`
   position: absolute;
@@ -83,42 +84,78 @@ function App() {
   const [chatMessages, setChatMessages] = useState<string[]>([]);
   const [newMessage, setNewMessage] = useState('');
 
-  const handleSend = () => {
-      fetch(`${process.env.REACT_APP_API_URL}/chat`, {
+  const handleAddChatMessage = useCallback((messages: []) => {
+    setChatMessages(messages);
+  }, []);
+
+  useEffect(() => {
+    const ws = new WebSocket(`${config.websocketUrl}/api/votes`);
+
+    ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.chatMessages) {
+            handleAddChatMessage(data.chatMessages)
+        }
+    };
+
+    ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+    };
+
+    return () => {
+        ws.close();
+    };
+  }, [handleAddChatMessage]);
+
+  const handleSendMessage = () => {
+    if (newMessage.trim().length === 0) {
+      return;
+    }
+
+    setChatMessages([...chatMessages, newMessage]);
+
+    fetch(`${config.apiUrl}/api/votes/chat`, {
+        credentials: 'include',
         method: 'POST',
-        body: JSON.stringify({ message: newMessage }),
-      });
-      setNewMessage('');
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ chatMessage: newMessage }),
+    })
+    .then((res) => {
+      if (res.ok) {
+        setNewMessage('');
+      }
+    });
+    setNewMessage('');
   };
 
   const toggleShareLink = () => {
     setShowShareLink(!showShareLink);
   };
 
-  const handleAddChatMessage = useCallback((messages: []) => {
-    setChatMessages(messages);
-  }, []);
-
   return (
     <AppContainer>
       <Header />
       <VoteSelection showShareLink={showShareLink} addChatMessages={handleAddChatMessage} />
       <ChatContainer>
-        {chatMessages.reverse().map((message, index) => (
-          <ChatBubble key={index} message={message} $isLast={index === 0} />
+        {chatMessages.map((message, index) => (
+          <ChatBubble key={index} message={message} $isLast={index === chatMessages.length - 1} />
         ))}
 
-        <InputContainer>
-          <MessageInput
-            type="text"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Type a message..."
-            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            maxLength={62}
-          />
-        <SendButton onClick={handleSend}>Send</SendButton>
-      </InputContainer>
+        {chatMessages.length > 0 && (
+          <InputContainer>
+            <MessageInput
+              type="text"
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              placeholder="Type a message..."
+              onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+              maxLength={62}
+            />
+            <SendButton onClick={handleSendMessage}>Send</SendButton>
+          </InputContainer>
+        )}
       </ChatContainer>
       <StyledFooter>
         © 2024 pollnest.com <span>| </span>
