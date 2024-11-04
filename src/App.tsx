@@ -13,6 +13,16 @@ const ChatContainer = styled.div`
 
   @media (min-width: 768px) {
     top: 100px;
+    // Show all messages on desktop
+    & > * {
+      display: block;
+    }
+  }
+
+  @media (max-width: 767px) {
+    // Ensure container doesn't overflow on mobile
+    max-height: 45vh;
+    overflow-y: auto;
   }
 `;
 
@@ -42,20 +52,17 @@ function App() {
     setShowShareLink(!showShareLink);
   };
 
-  const handleAddChatMessage = useCallback((message: string) => {
-    setChatMessages(prev => {
-        const updatedMessages = prev.length >= 10 ? prev.slice(1) : prev;
-        return [...updatedMessages, message];
-    });
-}, []);
+  const handleAddChatMessage = useCallback((messages: []) => {
+    setChatMessages(messages);
+  }, []);
 
   return (
     <AppContainer>
       <Header />
-      <VoteSelection showShareLink={showShareLink} addChatMessage={handleAddChatMessage} />
+      <VoteSelection showShareLink={showShareLink} addChatMessages={handleAddChatMessage} />
       <ChatContainer>
-        {chatMessages.map((message, index) => (
-          <ChatBubble key={index} message={message} />
+        {chatMessages.reverse().map((message, index) => (
+          <ChatBubble key={index} message={message} $isLast={index === 0} />
         ))}
       </ChatContainer>
       <StyledFooter>

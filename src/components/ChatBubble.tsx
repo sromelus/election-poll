@@ -2,12 +2,12 @@ import { styled } from 'styled-components';
 
 interface ChatBubbleProps {
   message: string;
-  isRight?: boolean;
+  $isLast?: boolean;
 }
 
-const BubbleContainer = styled.div<{ isRight: boolean }>`
+const BubbleContainer = styled.div`
   display: flex;
-  justify-content: ${props => props.isRight ? 'flex-end' : 'flex-start'};
+  justify-content: flex-start;
   margin: 8px 0;
   animation: floatUp 0.3s ease-out;
   
@@ -23,9 +23,9 @@ const BubbleContainer = styled.div<{ isRight: boolean }>`
   }
 `;
 
-const Bubble = styled.div<{ isRight: boolean }>`
-  background-color: ${props => props.isRight ? '#007bff' : '#e9ecef'};
-  color: ${props => props.isRight ? '#fff' : '#000'};
+const Bubble = styled.div<{ $isLast: boolean }>`
+  background-color: ${props => props.$isLast ? '#007bff' : '#e9ecef'};
+  color: ${props => props.$isLast ? '#fff' : '#000'};
   padding: 8px 16px;
   border-radius: 18px;
   max-width: 70%;
@@ -33,10 +33,10 @@ const Bubble = styled.div<{ isRight: boolean }>`
   opacity: 0.8;
 `;
 
-const ChatBubble = ({ message, isRight = false }: ChatBubbleProps) => {
+const ChatBubble = ({ message, $isLast = false }: ChatBubbleProps) => {
   return (
-    <BubbleContainer isRight={isRight}>
-      <Bubble isRight={isRight}>
+    <BubbleContainer>
+      <Bubble $isLast={$isLast}>
         {message}
       </Bubble>
     </BubbleContainer>

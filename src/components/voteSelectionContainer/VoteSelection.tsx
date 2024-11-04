@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import CandidateCard from './CandidateCard';
 import ProgressBar from './ProgressBar';
 import styled from 'styled-components';
@@ -103,10 +103,10 @@ const CloseButton = styled.button`
 
 interface VoteSelectionProps {
     showShareLink: boolean;
-    addChatMessage: (messages: string) => void;
+    addChatMessages: (messages: []) => void;
 }
 
-const VoteSelection = ({ showShareLink, addChatMessage }: VoteSelectionProps) => {
+const VoteSelection = ({ showShareLink, addChatMessages }: VoteSelectionProps) => {
     const [trumpPollNumbers, setTrumpPollNumbers] = useState<number>(0);
     const [kamalaPollNumbers, setKamalaPollNumbers] = useState<number>(0);
     const [gender, setGender] = useState<string>('');
@@ -131,9 +131,8 @@ const VoteSelection = ({ showShareLink, addChatMessage }: VoteSelectionProps) =>
             if (data.voteTally) {
                 setTrumpPollNumbers(data.voteTally.trump);
                 setKamalaPollNumbers(data.voteTally.kamala);
-                if(data.chatMessage) {
-                    const message = data.chatMessage
-                    addChatMessage(message)
+                if(data.chatMessages) {
+                    addChatMessages(data.chatMessages)
                 }
             }
         };
@@ -145,15 +144,9 @@ const VoteSelection = ({ showShareLink, addChatMessage }: VoteSelectionProps) =>
         return () => {
             ws.close();
         };
-    }, [addChatMessage]);
+    }, [addChatMessages]);
 
-    useEffect(() => {
-        getVotes();
-        setShowSocialShareButtons(showShareLink)
-
-    }, [showShareLink]);
-
-    const getVotes = () => {
+    const getVotes = useCallback(() => {
         fetch(`${config.apiUrl}/api/votes`, {
             credentials: 'include'
         })
@@ -178,11 +171,20 @@ const VoteSelection = ({ showShareLink, addChatMessage }: VoteSelectionProps) =>
                     setShowOutsideUS(true)
                     setAlertMessage('Voting is disabled for users outside the US.')
                 }
+
+                if(data.chatMessages) {
+                    addChatMessages(data.chatMessages)
+                }
             })
             .catch(error => {
                 console.error('Error fetching vote selection data:', error);
             });
-    }
+    }, [addChatMessages]);
+
+    useEffect(() => {
+        getVotes();
+        setShowSocialShareButtons(showShareLink)
+    }, [showShareLink, getVotes]);
 
     const postVote = (candidate: string) => {
         const data = {
