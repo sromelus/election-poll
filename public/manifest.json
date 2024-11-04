@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "PollNest",
+  "name": "PollNest - 2024 Election Poll",
   "icons": [
     {
       "src": "favicon.ico",
