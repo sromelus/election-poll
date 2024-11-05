@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import CandidateCard from './CandidateCard';
 import ProgressBar from './ProgressBar';
 import styled from 'styled-components';
@@ -103,10 +103,10 @@ const CloseButton = styled.button`
 
 interface VoteSelectionProps {
     showShareLink: boolean;
-    addChatMessages: (messages: []) => void;
+    sendChatMessagesToParent: (messages: []) => void;
 }
 
-const VoteSelection = ({ showShareLink, addChatMessages }: VoteSelectionProps) => {
+const VoteSelection = ({ showShareLink, sendChatMessagesToParent }: VoteSelectionProps) => {
     const [trumpPollNumbers, setTrumpPollNumbers] = useState<number>(0);
     const [kamalaPollNumbers, setKamalaPollNumbers] = useState<number>(0);
     const [gender, setGender] = useState<string>('');
@@ -124,67 +124,73 @@ const VoteSelection = ({ showShareLink, addChatMessages }: VoteSelectionProps) =
 
 
     useEffect(() => {
-        const ws = new WebSocket(`${config.websocketUrl}/api/votes`);
+        const pollData = async () => {
+            try {
+                const [votesResponse, chatResponse] = await Promise.all([
+                    fetch(`${config.apiUrl}/api/votes`, {
+                        credentials: 'include'
+                    }),
+                    fetch(`${config.apiUrl}/api/votes/chat`, {
+                        credentials: 'include'
+                    })
+                ]);
 
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            if (data.voteTally) {
-                setTrumpPollNumbers(data.voteTally.trump);
-                setKamalaPollNumbers(data.voteTally.kamala);
-                if(data.chatMessages) {
-                    addChatMessages(data.chatMessages)
+                if(votesResponse.status === 429) {
+                    setAlertMessage('Too many requests. Please try again in a few minutes.')
                 }
-            }
-        };
 
-        ws.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
+                if(chatResponse.status === 429) {
+                    setAlertMessage('Too many requests. Please try again in a few minutes.')
+                }
 
-        return () => {
-            ws.close();
-        };
-    }, [addChatMessages]);
-
-    const getVotes = useCallback(() => {
-        fetch(`${config.apiUrl}/api/votes`, {
-            credentials: 'include'
-        })
-            .then(response => {
-                if (response.status === 503) {
+                if (votesResponse.status === 503 || chatResponse.status === 503) {
                     setAlertMessage('We are currently under maintenance. Please try again later.');
                     throw new Error('Maintenance mode');
                 }
-                return response.json();
-            })
-            .then(data => {
-                setTrumpPollNumbers(data.voteTally.trump)
-                setKamalaPollNumbers(data.voteTally.kamala)
-                setDisabledVote(data.visitedUser.disabledVote)
-                if(data.visitedUser.disabledVote) {
+
+                const [votesData, chatData] = await Promise.all([
+                    votesResponse.json(),
+                    chatResponse.json()
+                ]);
+
+                if(votesData.voteTally && votesData.voteTally.trump){
+                    setTrumpPollNumbers(votesData.voteTally.trump);
+                    setKamalaPollNumbers(votesData.voteTally.kamala);
+                    setDisabledVote(votesData.visitedUser.disabledVote);
+                }
+
+                if(votesData.visitedUser && votesData.visitedUser.disabledVote) {
                     setShowAlreadyVoted(true)
                     setShowSocialShareButtons(true)
                     setAlertMessage('You have already voted!')
                 }
 
-                if(data.visitedUser.isRequestFromOutsideUS) {
+                if(votesData.visitedUser && votesData.visitedUser.isRequestFromOutsideUS) {
                     setShowOutsideUS(true)
                     setAlertMessage('Voting is disabled for users outside the US.')
                 }
 
-                if(data.chatMessages) {
-                    addChatMessages(data.chatMessages)
+                if (votesData.chatMessages) {
+                    sendChatMessagesToParent(chatData.chatMessages);
                 }
-            })
-            .catch(error => {
-                console.error('Error fetching vote selection data:', error);
-            });
-    }, [addChatMessages]);
+            } catch (error) {
+                console.error('Error fetching/polling vote selection data:', error);
+            }
+        };
+
+        // Initial poll
+        pollData();
+
+        // Set up polling interval
+        const pollInterval = setInterval(pollData, 3000);
+
+        // Cleanup
+        return () => clearInterval(pollInterval);
+    }, [sendChatMessagesToParent]);
 
     useEffect(() => {
-        getVotes();
-        setShowSocialShareButtons(showShareLink)
-    }, [showShareLink, getVotes]);
+        setShowSocialShareButtons(showShareLink);
+    }, [showShareLink]);
 
     const postVote = (candidate: string) => {
         const data = {

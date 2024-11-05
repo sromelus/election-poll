@@ -30,7 +30,6 @@ const Bubble = styled.div<{ $isLast: boolean }>`
   border-radius: 18px;
   max-width: 70%;
   word-wrap: break-word;
-  opacity: 0.8;
 `;
 
 const ChatBubble = ({ message, $isLast = false }: ChatBubbleProps) => {

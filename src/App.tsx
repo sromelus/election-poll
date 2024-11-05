@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import Modal from 'react-modal';
 import Header from './components/Header';
@@ -11,19 +11,14 @@ import { config } from './config/env';
 const ChatContainer = styled.div`
   position: absolute;
   top: 0px;
+  max-height: 100vh;
+  overflow-y: auto;
+  box-shadow: inset 0 0 10px blue;
+  max-height: 100vh;
+  overflow-y: auto;
 
   @media (min-width: 768px) {
-    top: 100px;
-    // Show all messages on desktop
-    & > * {
-      display: block;
-    }
-  }
-
-  @media (max-width: 767px) {
-    // Ensure container doesn't overflow on mobile
-    max-height: 45vh;
-    overflow-y: auto;
+    top: 80px;
   }
 `;
 
@@ -48,7 +43,6 @@ const InputContainer = styled.div`
   padding: 16px;
   background-color: #fff;
   border-top: 1px solid #e9ecef;
-  opacity: 0.7;
 `;
 
 const MessageInput = styled.input`
@@ -77,42 +71,76 @@ const SendButton = styled.button`
   }
 `;
 
+const ToggleChatButton = styled.button<{ $isGlowing: boolean }>`
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 1000;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+  margin: 0;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+
+  ${props => props.$isGlowing && `
+    animation: glow 1s ease-in-out infinite alternate;
+    background-color: #dc3545;  // Red color when glowing
+  `}
+
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 5px #dc3545, 0 0 10px #dc3545, 0 0 15px #dc3545;
+    }
+    to {
+      box-shadow: 0 0 10px #dc3545, 0 0 20px #dc3545, 0 0 30px #dc3545;
+    }
+  }
+`;
+
 Modal.setAppElement('#root');
 
 function App() {
   const [showShareLink, setShowShareLink] = useState<boolean>(false);
   const [chatMessages, setChatMessages] = useState<string[]>([]);
   const [newMessage, setNewMessage] = useState('');
+  const [hideChat, setHideChat] = useState<boolean>(true);
   const [alertMessage, setAlertMessage] = useState<string>('');
-  const handleAddChatMessage = useCallback((messages: []) => {
-    setChatMessages(messages);
-  }, []);
+  const [isGlowing, setIsGlowing] = useState(false);
+
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const ws = new WebSocket(`${config.websocketUrl}/api/votes`);
+    //scroll chat container to bottom
+    if (!hideChat && chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [hideChat, chatMessages]);
 
-    ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.chatMessages) {
-            handleAddChatMessage(data.chatMessages)
-        }
-    };
+  const letChildAddChatMessages = useCallback((messages: []) => {
+    setChatMessages(messages);
 
-    ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
-    };
+    const chatMessagesUpdated = messages.some((msg: string) => msg === 'updated');
 
-    return () => {
-        ws.close();
-    };
-  }, [handleAddChatMessage]);
+    console.log('chatMessagesUpdated', chatMessagesUpdated);
+    if (hideChat && chatMessagesUpdated) {
+      console.log('chatMessagesUpdated', chatMessagesUpdated);
+      setIsGlowing(true);
+      setTimeout(() => setIsGlowing(false), 5000);
+    }
+  }, [hideChat]);
 
   const handleSendMessage = () => {
     if (newMessage.trim().length === 0) {
       return;
     }
 
-    // setChatMessages([...chatMessages, newMessage]);
+    setChatMessages([...chatMessages, newMessage]);
 
     fetch(`${config.apiUrl}/api/votes/chat`, {
         credentials: 'include',
@@ -136,29 +164,46 @@ function App() {
     setShowShareLink(!showShareLink);
   };
 
+  const memoizedVoteSelection = useMemo(() => (
+    <VoteSelection
+      showShareLink={showShareLink}
+      sendChatMessagesToParent={letChildAddChatMessages}
+    />
+  ), [showShareLink, letChildAddChatMessages]);
+
   return (
     <AppContainer>
       <Header />
       <AlertMessage message={alertMessage} />
-      <VoteSelection showShareLink={showShareLink} addChatMessages={handleAddChatMessage} />
-      <ChatContainer>
-        {chatMessages.map((message, index) => (
-          <ChatBubble key={index} message={message} $isLast={index === chatMessages.length - 1} />
-        ))}
+      {memoizedVoteSelection}
+      <ChatContainer ref={chatContainerRef}>
+        {!hideChat && (
+          <>
+            {chatMessages.map((message, index) => (
+                <ChatBubble key={index} message={message} $isLast={index === chatMessages.length - 1} />
+            ))}
 
-        {chatMessages.length > 0 && (
-          <InputContainer>
-            <MessageInput
-              type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Type a message..."
-              onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-              maxLength={80}
-            />
-            <SendButton onClick={handleSendMessage}>Send</SendButton>
-          </InputContainer>
+            {chatMessages.length > 0 && (
+              <InputContainer>
+                <MessageInput
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder="Type a message..."
+                  onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                  maxLength={80}
+                />
+                <SendButton onClick={handleSendMessage}>Send</SendButton>
+              </InputContainer>
+            )}
+          </>
         )}
+        <ToggleChatButton
+          onClick={() => setHideChat(!hideChat)}
+          $isGlowing={isGlowing}
+        >
+          {hideChat ? `Show Chat (${chatMessages.length})` : 'Hide Chat'}
+        </ToggleChatButton>
       </ChatContainer>
       <StyledFooter>
         © 2024 pollnest.com <span>| </span>
