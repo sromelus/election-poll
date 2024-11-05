@@ -154,7 +154,7 @@ function App() {
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Type a message..."
               onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-              maxLength={62}
+              maxLength={80}
             />
             <SendButton onClick={handleSendMessage}>Send</SendButton>
           </InputContainer>

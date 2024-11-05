@@ -269,7 +269,7 @@ const VoteButton = ({
               placeholder={`I love my [candidate] so much!`}
               value={chatMessage}
               onChange={(e) => setChatMessage(e.target.value)}
-              maxLength={62}
+              maxLength={80}
             />
 
           </div>
