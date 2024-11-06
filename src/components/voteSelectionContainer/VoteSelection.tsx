@@ -160,9 +160,7 @@ const VoteSelection = ({ showShareLink, sendChatMessagesToParent }: VoteSelectio
                 }
 
                 if(votesData.visitedUser && votesData.visitedUser.disabledVote) {
-                    setShowAlreadyVoted(true)
-                    setShowSocialShareButtons(true)
-                    setAlertMessage('You have already voted!')
+                    setAlertMessage('You have already voted! Click on share button to share with your friends.')
                 }
 
                 if(votesData.visitedUser && votesData.visitedUser.isRequestFromOutsideUS) {

@@ -76,7 +76,7 @@ const ToggleChatButton = styled.button<{ $isGlowing: boolean }>`
   top: 16px;
   right: 16px;
   z-index: 1000;
-  background-color: #007bff;
+  background-color: #000;
   color: white;
   border: none;
   border-radius: 20px;
