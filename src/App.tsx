@@ -16,6 +16,7 @@ const ChatContainer = styled.div`
   box-shadow: inset 0 0 10px blue;
   max-height: 100vh;
   overflow-y: auto;
+  border-radius: 10px;
 
   @media (min-width: 768px) {
     top: 80px;
