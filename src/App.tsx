@@ -83,9 +83,11 @@ const ToggleChatButton = styled.button<{ $isGlowing: boolean }>`
   padding: 8px 16px;
   cursor: pointer;
   margin: 0;
+  font-weight: bold;
+  box-shadow: 0 0 10px 0px rgba(0, 0, 0, 1);
 
   &:hover {
-    background-color: #0056b3;
+    background-color: #000000bb;
   }
 
   ${props => props.$isGlowing && `
