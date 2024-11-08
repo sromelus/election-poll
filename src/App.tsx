@@ -1,10 +1,10 @@
 import { useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import Modal from 'react-modal';
+import styled from 'styled-components';
 import Header from './components/Header';
 import VoteSelection from './components/voteSelectionContainer/VoteSelection';
 import ChatBubble from './components/ChatBubble';
-import styled from 'styled-components';
 import AlertMessage from './components/AlertMessage';
 import { config } from './config/env';
 

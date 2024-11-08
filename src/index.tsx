@@ -2,14 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import MaintenancePage from './components/MaintenancePage';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+const isMaintenancePage = true;
+
 root.render(
   <React.StrictMode>
-    <App />
+    {isMaintenancePage ? <MaintenancePage /> : <App />}
   </React.StrictMode>
 );
 

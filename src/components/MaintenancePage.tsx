@@ -42,7 +42,7 @@ const MaintenancePage = () => {
         Thank you for your patience.
       </Message>
       <EstimatedTime>
-        Expected downtime: A few minutes
+        Expected downtime: 2 days
       </EstimatedTime>
     </MaintenanceContainer>
   );
