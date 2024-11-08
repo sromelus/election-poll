@@ -1,4 +1,5 @@
 import { styled } from 'styled-components';
+import logo from '../pollnest-high-resolution-logo-grayscale-transparent copy.png';
 
 const MaintenanceContainer = styled.div`
   height: 100vh;
@@ -34,6 +35,7 @@ const EstimatedTime = styled.p`
 const MaintenancePage = () => {
   return (
     <MaintenanceContainer>
+      <img src={logo} alt="PollNest" width={200} style={{ marginBottom: '20px' }} />
       <Title>We'll be back soon!</Title>
       <Message>
         We're currently performing some maintenance on our site to serve you better.
